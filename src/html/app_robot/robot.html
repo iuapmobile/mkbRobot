@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>智能问答</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no, email=no"/>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/common.css"/>
+    <link rel="stylesheet" href="./robot.css"/>
+
+	<!--菜单类型-->
+    <script id="menuTmpl" type="text/x-dot-template">
+        <div class="chat-item-text ">
+            <div class="multiSelect-header">{{= it.text}}</div>
+            <div class="multiSelect-content-box">
+                {{~it.list :menuValue:menuindex}}
+                <div class="multiSelect-content-item um-text-overflow {{=(menuindex>4)?'newsindex_4 none':''}}" onclick="clickResponseUrl('{{= menuValue.detailurl}}')">
+                    {{= menuindex+1+'.'}}{{= menuValue.info}}
+                </div>
+                {{~}}
+            </div>
+            {{?it.list.length>4}}
+            	<div class="listmore" onclick="showmore(this)">更多>></div>
+             {{?}}       
+        </div>
+    </script>
+    <!--列表类型-->
+    <script id="multiSelectTmpl" type="text/x-dot-template">
+        <div class="chat-item-text ">
+            <div class="multiSelect-header">您是想问</div>
+            <div class="multiSelect-content-box">
+                {{~it.answers :value:index}}
+                {{?value.code== 100000 }}
+                <div class="multiSelect-content-item um-text-overflow">
+                    {{=formatText(value.text)}}
+                </div>
+                {{?? value.code==200000}}
+                <div class="multiSelect-content-item um-text-overflow"
+                     onclick="clickResponseUrl('{{= value.url}}')">
+                    {{=value.text}}
+                </div>
+                {{?}}
+                {{~}}
+            </div>
+        </div>
+    </script>
+    <!--新闻类型-->
+    <script id="newsTmpl" type="text/x-dot-template">
+        <div class="chat-item-text ">
+            <div class="multiSelect-header">{{=it.text}}</div>
+            <div class="multiSelect-content-box">
+                {{~it.list :newsValue:newsindex}}
+               
+                <div class="multiSelect-content-item um-text-overflow {{=(newsindex>4)?'newsindex_4 none':''}}"
+                     onclick="clickResponseUrl('{{=newsValue.detailurl}}')">
+                    {{= newsindex+1+'.'}}{{=newsValue.article}}
+                </div>
+                {{~}}
+            </div>
+            {{? it.list.length>4}}
+            	<div class="listmore" onclick="showmore(this)">更多>></div>
+             {{?}}
+        </div>
+    </script>
+</head>
+<body>
+<div class="um-win" id="main">
+    <div class="um-header">
+        <a href="#" class="um-back" onclick="summer.closeWin()"></a>
+
+        <h3 class="headSpan">我要提问</h3>
+    </div>
+    <div class="um-content p5" id="content">
+        <div id="convo">
+            <ul class="chat-thread" id="chat-thread">
+            	<!--现实历史信息-->
+                <script id="chatHistoryTmpl" type="text/x-dot-template">
+                    {{~it.data :value:index }}
+                    {{? value.role=='0' && value.chat.code=='100000'}}
+                    <li class="left-item">
+
+                        <img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
+
+                        <div class="chat-item-text">{{= formatText(value.chat.text)}}</div>
+                    </li>
+                    {{?? value.role=='0' &&  value.chat.code=='110000'}}
+                    <li class="left-item multiSelect-response">
+                        <img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
+
+                        <div class="chat-item-text ">
+                            <div class="multiSelect-header">您是想问</div>
+                            <div class="multiSelect-content-box">
+                                {{~value.chat.answers :answersValue:answersIndex}}
+                                {{? answersValue.code == 100000}}
+                                <div class="multiSelect-content-item um-text-overflow">
+                                    {{= formatText(answersValue.text)}}
+                                </div>
+                                {{?? answersValue.code == 200000}}
+                                <div class="multiSelect-content-item um-text-overflow"
+                                     onclick="clickResponseUrl('{{= answersValue.url}}')">
+                                    {{= answersValue.text}}
+                                </div>
+                                {{?}}
+                                {{~}}
+                            </div>
+                        </div>
+                    </li>
+                    {{?? value.role=='0' &&  value.chat.code=='200000' }}
+                    <li class="left-item img-response">
+                        <img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
+
+                        <div class="chat-item-text " onclick="clickResponseUrl('{{= value.chat.url}}')">{{=
+                            value.chat.text}}
+                        </div>
+                    </li>
+                    {{?? value.role=='0' &&  value.chat.code=='302000' }}
+                    <li class="left-item multiSelect-response">
+                        <img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
+
+                        <div class="chat-item-text ">
+                            <div class="multiSelect-header">{{= value.chat.text}}</div>
+                            <div class="multiSelect-content-box">
+                                {{~value.chat.list :newsValue:newsindex}}
+                                <div class="multiSelect-content-item um-text-overflow  {{=(newsindex>4)?'newsindex_4 none':''}}"
+                                     onclick="clickResponseUrl('{{= newsValue.detailurl}}')">
+                                    {{= newsValue.article}}
+                                </div>
+                                {{~}}
+                            </div>
+				            {{? value.chat.list.length>4}}
+				            	<div class="listmore" onclick="showmore(this)">更多>></div>
+				             {{?}}
+                        </div>
+                    </li>
+                    {{?? value.role=='0' &&  value.chat.code=='308000' }}
+                    <li class="left-item multiSelect-response">
+                        <img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
+
+                        <div class="chat-item-text ">
+                            <div class="multiSelect-header">{{= value.chat.text}}</div>
+                            <div class="multiSelect-content-box">
+                                {{~value.chat.list :menuValue:menuindex}}
+                                <div class="multiSelect-content-item um-text-overflow  {{=(newsindex>4)?'newsindex_4 none':''}}"
+                                     onclick="clickResponseUrl('{{= menuValue.detailurl}}')">
+                                    {{= menuValue.info}}
+                                </div>
+                                {{~}}
+                            </div>
+				           	{{? value.chat.list.length>4}}
+				            	<div class="listmore" onclick="showmore(this)">更多>></div>
+				             {{?}}
+                        </div>
+                    </li>
+                    {{?? value.role=='1'}}
+                    <li class="right-item">
+                        {{? typeof it.headerPath == 'string'}}
+                        <img src="{{= it.headerPath}}" alt=""/>
+                        {{??}}
+                        <span class="img-name" style="{{= it.headerPath.bgc}}">{{= it.headerPath.content}}</span>
+                        {{?}}
+                        <div class="chat-item-text">{{= formatText(value.chat.info)}}</div>
+                    </li>
+                    {{?}}
+                    {{~}}
+                </script>
+            </ul>
+            <div class="chat-tips-box">
+                <span class="chat-tips">没有想要的，<span class="search-for-hr" onclick="goFeedback()">找HR反馈</span></span>
+            </div>
+        </div>
+
+    </div>
+    <div class="um-footer">
+        <div class="common-tips-container">
+            <ul class="common-tips-box clearfix">
+                <li class="common-tips-item" onclick="commonQuestion('入职报到')">
+                    入职报到
+                </li>
+                <li class="common-tips-item" onclick="commonQuestion('新闻')">
+                    新闻
+                </li>
+                <li class="common-tips-item" onclick="commonQuestion('公积金支取')">
+                    公积金
+                </li>
+                <li class="common-tips-item" onclick="commonQuestion('开证明')">
+                    开证明
+                </li>
+            </ul>
+        </div>
+         <div class="chat-input-box">
+            <img src="../../image/robot/speech.png" alt="" class="change-input-type" data-flag='speech'/>
+        
+            <div class="show-input">
+                <input type="text" class="form-control chat-input" placeholder="亲，有什么想要问我的吗？"/>
+                <button class="btn chat-send">发送</button>
+            </div>
+            <div class="show-speech none" onclick="speechToString()">
+                点击 说话
+            </div>
+        
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript" src="../../js/public/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="../../js/public/summer.js"></script>
+<script type="text/javascript" src="../../js/public/font.js"></script>
+<script type="text/javascript" src="../../js/public/doT.min.js"></script>
+<script src="robot.js"></script>
+</body>
+</html>
