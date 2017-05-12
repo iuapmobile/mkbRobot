@@ -1,0 +1,66 @@
+var robotData = {
+	"responseHeader" : {
+		"status" : 0,
+		"QTime" : 0,
+		"params" : {
+			"q" : "*:*",
+			"indent" : "on",
+			"wt" : "json"
+		}
+	},
+	"response" : {
+		"numFound" : 6,
+		"start" : 0,
+		"docs" : [{
+			"createTime" : "2015-05-12 10:27:02.0",
+			"author" : "边传猛",
+			"updateTime" : "2015-10-12 10:34:19.0",
+			"id" : 1,
+			"title" : "元数据管理工具功能简介",
+			"descript" : "dd",
+			"url" : "http://udn.yyuap.com/doc/ae/1507337.html",
+			"_version_" : 1567172666768490496
+		}, {
+			"createTime" : "2017-05-12 10:27:02.0",
+			"updateTime" : "2017-05-12 10:34:19.0",
+			"id" : 2,
+			"title" : "emm_portal单点登录模块应用",
+			"descript" : "dd",
+			"url" : "http://udn.yyuap.com/forum.php?mod=viewthread&tid=30791",
+			"_version_" : 1567172666820919296
+		}, {
+			"createTime" : "2017-05-12 10:34:19.0",
+			"author" : "段丽霞",
+			"updateTime" : "2017-05-12 10:34:19.0",
+			"id" : 3,
+			"title" : "数据处理平台产品API文档",
+			"descript" : "知识库>产品API文档",
+			"url" : "http://udn.yyuap.com/doc/ae/920513.html",
+			"_version_" : 1567172666823016448
+		}, {
+			"createTime" : "2017-05-12 11:15:51.0",
+			"updateTime" : "2017-05-12 11:15:51.0",
+			"id" : 4,
+			"title" : "高稳定性高并发全平台社交聊天IM对外合作支持源码",
+			"descript" : "成熟的消息收发确认机制，支持万人大群\n\n支持开发自定义的消息sdk接口，扩展性超强\n\n支持单/群聊，支持红包/文件等功能模块 支持朋友圈分享等功能\n\n同步增加商城/H5应用/附近的人/等模块化功能",
+			"url" : "http://udn.yyuap.com/forum.php?mod=viewthread&tid=146729",
+			"_version_" : 1567172666827210752
+		}, {
+			"createTime" : "2017-05-12 11:17:47.0",
+			"updateTime" : "2017-05-12 11:17:47.0",
+			"id" : 5,
+			"title" : "iUAP Mobile 移动开发工具（稳定版v2.5.1）下载",
+			"descript" : "此文件较大，约688M，请使用web端下载，谢谢",
+			"url" : "http://udn.yyuap.com/forum.php?mod=viewthread&tid=33279",
+			"_version_" : 1567172666830356480
+		}, {
+			"createTime" : "2017-05-12 11:38:27.0",
+			"updateTime" : "2017-05-12 11:38:27.0",
+			"id" : 6,
+			"title" : "DI常见问题",
+			"descript" : "1.1.     作业 调度： 如何并行 执行 ？1.2.     表输出：如何 自动创建表 ？1.3.     作业 调度 ：如何 设置转换无效 ？",
+			"url" : "http://udn.yyuap.com/doc/ae/919180.html",
+			"_version_" : 1567172666832453632
+		}]
+	}
+}

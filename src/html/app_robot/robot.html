@@ -32,17 +32,13 @@
         <div class="chat-item-text ">
             <div class="multiSelect-header">您是想问</div>
             <div class="multiSelect-content-box">
-                {{~it.answers :value:index}}
-                {{?value.code== 100000 }}
-                <div class="multiSelect-content-item um-text-overflow">
-                    {{=formatText(value.text)}}
-                </div>
-                {{?? value.code==200000}}
+                {{~it.docs :value:index}}
+
                 <div class="multiSelect-content-item um-text-overflow"
-                     onclick="clickResponseUrl('{{= value.url}}')">
-                    {{=value.text}}
+                     onclick="clickResponseUrl('{{= value.url}}','{{=value.title}}')">
+                    {{=value.title}}
                 </div>
-                {{?}}
+  
                 {{~}}
             </div>
         </div>
@@ -69,8 +65,6 @@
 <body>
 <div class="um-win" id="main">
     <div class="um-header">
-        <a href="#" class="um-back" onclick="summer.closeWin()"></a>
-
         <h3 class="headSpan">我要提问</h3>
     </div>
     <div class="um-content p5" id="content">
@@ -168,7 +162,7 @@
                 </script>
             </ul>
             <div class="chat-tips-box">
-                <span class="chat-tips">没有想要的，<span class="search-for-hr" onclick="goFeedback()">找HR反馈</span></span>
+                <span class="chat-tips">没有想要的，<span class="search-for-hr" onclick="goFeedback()">请点击我</span></span>
             </div>
         </div>
 
@@ -209,6 +203,8 @@
 <script type="text/javascript" src="../../js/public/summer.js"></script>
 <script type="text/javascript" src="../../js/public/font.js"></script>
 <script type="text/javascript" src="../../js/public/doT.min.js"></script>
+<script type="text/javascript" src="../../js/public/layer_mobile/layer.js"></script>
+<script src="data.js"></script>
 <script src="robot.js"></script>
 </body>
 </html>

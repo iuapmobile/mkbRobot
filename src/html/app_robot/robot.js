@@ -73,6 +73,7 @@ function init() {
 };
 //创建用户问题
 function createUserTalk(text) {
+	/*
 	var _uinfo = summer.getStorage('userinfo');
     var headerPath = _uinfo.useravator ? _uinfo.useravator : {};
     if (typeof  headerPath == 'object') {
@@ -83,6 +84,9 @@ function createUserTalk(text) {
         var $li = $('<li class="right-item"> <img src="' + headerPath + '" alt=""/> <div class="chat-item-text">' + text + '</div> </li>');
 
     }
+    */
+   var headerPath = "../../img/icon.png"
+    var $li = $('<li class="right-item"> <img src="' + headerPath + '" alt=""/> <div class="chat-item-text">' + text + '</div> </li>');
     $('#chat-thread').append($li);
     var top = $('#convo').height();
     $('#content').animate({
@@ -91,12 +95,13 @@ function createUserTalk(text) {
 }
 //本地存储用户问题
 function storageUserTalk(text) {
+/*
     var userinfo = summer.getStorage("userinfo");
     //人员id
     var staffID = userinfo.staffid;
     //租户id
     var tenantID = userinfo.tenantid;
-
+*/
     var chatItem = {
         role: '1',//0是机器人，1是用户
         chat: {//文字类
@@ -128,25 +133,23 @@ function storageUserTalk(text) {
 
 //调用数据请求接口
 function getRobotResponse(text) {
-    var $li = $('<li class="left-item"> <img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/> <div class="chat-item-text">正在输入...</div> </li>')
+    var $li = $('<li class="left-item"> <img src="../../img/robot.jpg" alt="" onclick="goRobotDetail()"/> <div class="chat-item-text">正在输入...</div> </li>')
     $('#chat-thread').append($li);
     var top = $('#convo').height();
     $('#content').animate({
         scrollTop: top
     }, 300);
-    ajaxRequest('/robot/ask', "get", "application/x-www-form-urlencoded", {
-        info: text,
-        msgtype: "text"
-    }, function (data) {
-        console.log(data);
-        storageRobotResponse(data);
-        renderRobotResponse(data, $li);
-    })
+
+    //storageRobotResponse(robotData);
+    renderRobotResponse(robotData, $li);
+
 
 
 }
 //渲染机器人单条回答
 function renderRobotResponse(data, $li) {
+	commonRenderRobot(data.response, $("#multiSelectTmpl"), $li);
+	return;
     if (data.code == 100000) {
         $li.find('.chat-item-text').html(formatText(data.text));
         var top = $('#convo').height()
@@ -209,14 +212,16 @@ function commonQuestion(text) {
     getRobotResponse(text);
 }
 //点击回答中的链接
-function clickResponseUrl(url) {
+function clickResponseUrl(url,title) {
     var url = url.replace(/="" /g, '//');
+    var hti = title.substring(0,5);
     console.log(url);
     summer.openWin({
         id: 'responsePage',
         url: 'html/app_robot/responsePage.html',
         pageParam: {
-            frameUrl: url
+            frameUrl: url,
+            title : hti
         }
     })
 }
@@ -326,11 +331,16 @@ function showmore(obj) {
 function sendOut(dataval) {
     var chatText = dataval;
     if (chatText == '') {
+    	layer.open({
+            content: '请输入您的问题',
+            skin: 'msg',
+            time: 1 //1秒后自动关闭
+        });
         jqAlert('请输入您的问题！');
         return;
     } else {
         createUserTalk(chatText);
-        storageUserTalk(chatText);
+       // storageUserTalk(chatText);
         $('.chat-input').val('').blur();
         // setTimeout(function () {
         getRobotResponse(chatText);

@@ -39,6 +39,7 @@
 <div class="um-win" id="main">
     <div class="um-header" id="header">
         <a href="#" class="um-back" onclick="summer.closeWin()"></a>
+        <h3 id="title"></h3>
     </div>
     <div class="um-content p5" id="content">
 
@@ -51,6 +52,8 @@
 <script>
     summerready= function () {
         var url=summer.pageParam.frameUrl;
+        var title = summer.pageParam.title;
+        $("#title").html(title);
         console.log(url);
         var top = $summer.offset($summer.byId('header')).h;
         summer.openFrame({

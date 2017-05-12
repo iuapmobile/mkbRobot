@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application>
-	<app_start>index.html</app_start>
-	<app_name>mkb</app_name>
-	<project_name>mkb</project_name>
-	<package_name>com.yonyou.mkb</package_name>
-	<frame_name>ump</frame_name>
-	<icon relativePath="css/themes/default/app">app</icon>
-	<versionCode>1</versionCode>
-	<versionBuild>1</versionBuild>
-	<versionName>1</versionName>
-	<orientation>unspecified</orientation>
-	<permission id="android.permission.INTERNET"/>
-	<statebarstyle>dark</statebarstyle>
-	<isfullscreen>false</isfullscreen>
-	<windowSoftInputMode>stateHidden</windowSoftInputMode>
-	<import id="cordova-plugin-http" type="web" ref="cordova"/>  
-	<import id="cordova-plugin-camera" type="web" ref="cordova"/>  
-	<import id="cordova-plugin-file" type="web" ref="cordova"/>  
-	<import id="cordova-plugin-whitelist" type="web" ref="cordova"/> 
-</application><!--
+
+<application> 
+  <app_start>html/app_robot/robot.html</app_start>  
+  <app_name>mkb</app_name>  
+  <project_name>mkb</project_name>  
+  <package_name>com.yonyou.mkb</package_name>  
+  <frame_name>ump</frame_name>  
+  <icon relativePath="css/themes/default/app">app</icon>  
+  <versionCode>1</versionCode>  
+  <versionBuild>1</versionBuild>  
+  <versionName>1</versionName>  
+  <orientation>unspecified</orientation>  
+  <permission id="android.permission.INTERNET"></permission>  
+  <statebarstyle>dark</statebarstyle>  
+  <isfullscreen>false</isfullscreen>  
+  <windowSoftInputMode>stateHidden</windowSoftInputMode>  
+  <import id="cordova-plugin-http" type="web" ref="cordova"></import>  
+  <import id="cordova-plugin-camera" type="web" ref="cordova"/>  
+  <import id="cordova-plugin-file" type="web" ref="cordova"/>  
+  <import id="cordova-plugin-whitelist" type="web" ref="cordova"/> 
+</application>
+<!--
 【屏幕显示方向】
   screenOrientation: 屏幕显示方向
     landscape: 横向
