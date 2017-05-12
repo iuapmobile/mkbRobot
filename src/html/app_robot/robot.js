@@ -208,7 +208,7 @@ function storageRobotResponse(data) {
 //点击常用问题
 function commonQuestion(text) {
     createUserTalk(text);
-    storageUserTalk(text);
+    //storageUserTalk(text);
     getRobotResponse(text);
 }
 //点击回答中的链接
