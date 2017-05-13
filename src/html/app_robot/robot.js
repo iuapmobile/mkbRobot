@@ -213,7 +213,7 @@ function commonQuestion(text) {
 }
 //点击回答中的链接
 function clickResponseUrl(url,title) {
-    var url = url.replace(/="" /g, '//');
+   /* var url = url.replace(/="" /g, '//');
     var hti = title.substring(0,5);
     console.log(url);
     summer.openWin({
@@ -223,7 +223,8 @@ function clickResponseUrl(url,title) {
             frameUrl: url,
             title : hti
         }
-    })
+    })*/
+   window.open(url);   
 }
 $(function () {
     //切换输入和语音方式
