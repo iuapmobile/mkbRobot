@@ -311,7 +311,6 @@
  	line-height:40px;
  	text-align:center;
  	position: relative;
- 	left:-53px;
  	background:#E50014;
  }
  .searchButton:active{
@@ -329,4 +328,13 @@
  	width:45px;
  	height:50px;
  	cursor: pointer;
+ }
+ .searchArticle{
+ 	width:900px;
+ 	position: absolute;
+ 	top:40%;
+ 	left:20%;
+ 	height:400px;
+ 	overflow: scroll;
+ 	background:#fff;
  }
