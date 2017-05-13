@@ -3504,11 +3504,15 @@ html1.um-win1 {
 }
 */
 .um-win {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
+ /* position: absolute;
+  top: 100px;
+  right: 10%;
+  height:500px;
+  bottom: 30%;
   left: 0;
+  width:300px;*/
+ width:100%;
+ height:100%;
   display: -webkit-box;
   display: box;
   display: -webkit-flex;
