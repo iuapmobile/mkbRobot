@@ -330,11 +330,11 @@
  	cursor: pointer;
  }
  .searchArticle{
- 	width:900px;
+ 	/*width:900px;*/
  	position: absolute;
  	top:40%;
  	left:20%;
- 	height:400px;
+ 	/*height:400px;*/
  	overflow: scroll;
- 	background:#fff;
+ 	background:#eeeeee;
  }

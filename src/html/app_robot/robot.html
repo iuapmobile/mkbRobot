@@ -245,31 +245,36 @@
 		
 	});
 	$(function(){
-			 	/*$("#searchButton").on("click", function() {
+			        $("#searchButton").on("click", function() {
 					  var content = $('#searchbox').val();
 					  console.log(content);
 					  $.ajax({
 					    type: "get",
-					    url: "http://172.27.35.3:8080/solr/mycore1/select",
+                        dataType: "json",
+					    url2: "http://172.27.35.3:8080/solr/mycore1/select",
+                        url: "http://127.0.0.1:8080/solr/mycore1/select",
 					    data: {
 					    	indent:"on",
-					    	q:"*"+content+"*",
+					    	q: !content?"*:*":content,
 					    	wt:"json"
 					    },
-					    success: function(msg) {
-					      alert(1);
-					      alert(msg);
+					    success: function(data) {
+					        //alert(1);
+					        alert(JSON.stringify(data));
+                            var arrText1 = doT.template($("#list1").text());
+                            $(".searchArticle").html(arrText1(data.response.docs));
+
 					    }
 					  });
 					
-					}); */
-			$("#searchButton").on("click", function() {
+					}); 
+			$("#searchButton1").on("click", function() {
 					  var arrText1 = doT.template($("#list1").text());
                       $(".searchArticle").html(arrText1(data.response.docs));
 					 
 		   });
 	});
-	var data={
+	var data_demo={
 		  "responseHeader":{
 		    "status":0,
 		    "QTime":75,
