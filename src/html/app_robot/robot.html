@@ -12,6 +12,34 @@
 		<link rel="stylesheet" href="./robot.css"/>
 	</head>
 	<body>
+		<!--列表类型-->
+	    <script id="multiSelectTmpl" type="text/x-dot-template">
+	        <div class="chat-item-text ">
+	            <div class="multiSelect-header">您是想问</div>
+	            <div class="multiSelect-content-box">
+	                {{~it.docs :value:index}}
+	                <div class="multiSelect-content-item um-text-overflow"
+	                     onclick="clickResponseUrl('{{= value.url}}')">
+	                    {{=index}}:{{=value.title}}
+	                </div>
+	                {{~}}
+	            </div>
+	        </div>
+	    </script>
+		<div class="searchContent">
+				<div class="s_form">
+					<div class="fl"  >
+						<img src="../../image/robot/iuap_logo.png" height=40 class="fl" alt="" />
+					</div>
+					<input type="text" class="searchbox fl" id="searchbox" style="position: relative; padding:5px;" >
+					<div class="fl searchButton" id="searchButton" style="">
+						<p class="">
+							search
+						</p>
+					</div>
+				</div>
+
+			</div>
 		<div class="Hcontent" >
 			<div class="robotPhoto">
 				<img src="../../image/robot/robot.png"  width=40 height=45 alt="" />
@@ -24,96 +52,7 @@
 					<div class="um-content p5" id="content">
 						<div id="convo">
 							<ul class="chat-thread" id="chat-thread">
-								<!--现实历史信息-->
-								<script id="chatHistoryTmpl" type="text/x-dot-template">
-									{{~it.data :value:index }}
-									{{? value.role=='0' && value.chat.code=='100000'}}
-									<li class="left-item">
-
-									<img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
-
-									<div class="chat-item-text">{{= formatText(value.chat.text)}}</div>
-									</li>
-									{{?? value.role=='0' &&  value.chat.code=='110000'}}
-									<li class="left-item multiSelect-response">
-									<img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
-
-									<div class="chat-item-text ">
-									<div class="multiSelect-header">您是想问</div>
-									<div class="multiSelect-content-box">
-									{{~value.chat.answers :answersValue:answersIndex}}
-									{{? answersValue.code == 100000}}
-									<div class="multiSelect-content-item um-text-overflow">
-									{{= formatText(answersValue.text)}}
-									</div>
-									{{?? answersValue.code == 200000}}
-									<div class="multiSelect-content-item um-text-overflow"
-									onclick="clickResponseUrl('{{= answersValue.url}}')">
-									{{= answersValue.text}}
-									</div>
-									{{?}}
-									{{~}}
-									</div>
-									</div>
-									</li>
-									{{?? value.role=='0' &&  value.chat.code=='200000' }}
-									<li class="left-item img-response">
-									<img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
-
-									<div class="chat-item-text " onclick="clickResponseUrl('{{= value.chat.url}}')">{{=
-									value.chat.text}}
-									</div>
-									</li>
-									{{?? value.role=='0' &&  value.chat.code=='302000' }}
-									<li class="left-item multiSelect-response">
-									<img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
-
-									<div class="chat-item-text ">
-									<div class="multiSelect-header">{{= value.chat.text}}</div>
-									<div class="multiSelect-content-box">
-									{{~value.chat.list :newsValue:newsindex}}
-									<div class="multiSelect-content-item um-text-overflow  {{=(newsindex>4)?'newsindex_4 none':''}}"
-									onclick="clickResponseUrl('{{= newsValue.detailurl}}')">
-									{{= newsValue.article}}
-									</div>
-									{{~}}
-									</div>
-									{{? value.chat.list.length>4}}
-									<div class="listmore" onclick="showmore(this)">更多>></div>
-									{{?}}
-									</div>
-									</li>
-									{{?? value.role=='0' &&  value.chat.code=='308000' }}
-									<li class="left-item multiSelect-response">
-									<img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
-
-									<div class="chat-item-text ">
-									<div class="multiSelect-header">{{= value.chat.text}}</div>
-									<div class="multiSelect-content-box">
-									{{~value.chat.list :menuValue:menuindex}}
-									<div class="multiSelect-content-item um-text-overflow  {{=(newsindex>4)?'newsindex_4 none':''}}"
-									onclick="clickResponseUrl('{{= menuValue.detailurl}}')">
-									{{= menuValue.info}}
-									</div>
-									{{~}}
-									</div>
-									{{? value.chat.list.length>4}}
-									<div class="listmore" onclick="showmore(this)">更多>></div>
-									{{?}}
-									</div>
-									</li>
-									{{?? value.role=='1'}}
-									<li class="right-item">
-									{{? typeof it.headerPath == 'string'}}
-									<img src="{{= it.headerPath}}" alt=""/>
-									{{??}}
-									<span class="img-name" style="{{= it.headerPath.bgc}}">{{= it.headerPath.content}}</span>
-									{{?}}
-									<div class="chat-item-text">{{= formatText(value.chat.info)}}</div>
-									</li>
-									{{?}}
-									{{~}}
-								</script>
+								
 							</ul>
 							<div class="chat-tips-box">
 								<span class="chat-tips">没有想要的，<span class="search-for-hr" onclick="goFeedback()">请点击我</span></span>
@@ -122,22 +61,6 @@
 
 					</div>
 					<div class="um-footer">
-						<div class="common-tips-container">
-							<ul class="common-tips-box clearfix">
-								<li class="common-tips-item" onclick="commonQuestion('入职报到')">
-									入职报到
-								</li>
-								<li class="common-tips-item" onclick="commonQuestion('新闻')">
-									新闻
-								</li>
-								<li class="common-tips-item" onclick="commonQuestion('公积金支取')">
-									公积金
-								</li>
-								<!--  <li class="common-tips-item" onclick="commonQuestion('开证明')">
-								开证明
-								</li> -->
-							</ul>
-						</div>
 						<div class="chat-input-box">
 							<img src="../../image/robot/speech.png" alt="" class="change-input-type" data-flag='speech'/>
 
@@ -157,20 +80,7 @@
 				</div>
 			</div>
 
-			<div class="searchContent">
-				<div class="s_form">
-					<div class="fl"  >
-						<img src="../../image/robot/iuap_logo.png" height=40 class="fl" alt="" />
-					</div>
-					<input type="text" class="searchbox fl" id="searchbox" style="position: relative; padding:5px;" >
-					<div class="fl searchButton" id="searchButton" style="">
-						<p class="">
-							search
-						</p>
-					</div>
-				</div>
-
-			</div>
+			
 			<div class="searchArticle">
 				<div class="searchResult">
 
@@ -182,7 +92,7 @@
 			<ul>
 			{{ for (var i=0;i<it.length;i++ ){ }}
 			<li class="pt20 clearfix pl20" >
-			<a href="{{=it[i].url}}" class="title mb10">
+			<a href="{{=it[i].url}}" class="title mb10" target="view_window">
 			{{=it[i].title}}
 			</a>
 			{{if(it[i].descriptImg){}}
@@ -209,6 +119,7 @@
 		<script type="text/javascript" src="../../js/public/summer.js"></script>
 		<script type="text/javascript" src="../../js/public/doT.min.js"></script>
 		<script type="text/javascript" src="../../js/public/layer_mobile/layer.js"></script>
+		<script type="text/javascript" src="./robot.js"></script>
 		<script type="text/javascript" src="data.js"></script>
 		<script>
 			$('.robotPhoto').on('click', function(e) {

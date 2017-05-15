@@ -45,7 +45,7 @@ function renderChatHistory() {
 
 //欢迎语
 function sayhello() {
-    var $li = $('<li class="left-item"> <img src="../../image/common/robotl.png" alt=""  onclick="goRobotDetail()"/> <div class="chat-item-text ">您好，我是HR小助手雪儿，有什么疑难问题都可以问我</div> </li>');
+    var $li = $('<li class="left-item"> <img src="../../img/robot.jpg" alt=""  onclick="goRobotDetail()"/> <div class="chat-item-text ">您好，我是智能，有什么疑难问题都可以问我</div> </li>');
     $('#chat-thread').append($li);
     var top = $('#convo').height()
     $('#content').animate({
@@ -139,12 +139,29 @@ function getRobotResponse(text) {
     $('#content').animate({
         scrollTop: top
     }, 300);
-
+	
     //storageRobotResponse(robotData);
-    renderRobotResponse(robotData, $li);
+    
+    $.ajax({
+		type : "get",
+		dataType : "json",
+		url2 : "http://172.27.35.3:8080/solr/mycore1/select",
+		url : "http://127.0.0.1:8080/solr/mycore1/select",
+		data : {
+			indent : "on",
+			q : !text ? "*:*" : text,
+			wt : "json"
+		},
+		success : function(data) {
+			//alert(1);
+			renderRobotResponse(data, $li);
 
-
-
+		},
+		error : function(res) {
+			var data = data_demo;
+			renderRobotResponse(data, $li);
+		}
+	});
 }
 //渲染机器人单条回答
 function renderRobotResponse(data, $li) {

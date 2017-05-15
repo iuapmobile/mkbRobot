@@ -277,7 +277,7 @@
 /*对整个页面单独处理*/
 html, body {
 	width: 100%;
-	height: auto;
+	position:relative;
 	background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
 }
 .robotPhoto {
@@ -286,10 +286,14 @@ html, body {
 	top: 20px;
 }
 .searchContent {
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:60px;
 }
 .s_form{ 
     padding: 10px;
-    overflow: hidden;
 }
 .searchbox {
 	width: 587px;
@@ -324,6 +328,7 @@ html, body {
 }
 .searchArticle {
 	padding-left:10px;	
+	padding-top:60px;
 	width:764px;
 }
 .searchResult{
@@ -341,6 +346,11 @@ text-decoration: underline;
 }
 .descImg{
 	display:none;
+}
+.descImg img{
+	display:block;
+	width:100%;
+	height:100%;
 }
 .IC .descImg{
 	width:120px;
