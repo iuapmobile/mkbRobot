@@ -223,12 +223,18 @@
 <script id="list1" type="text/x-dot-template"> 
 			<ul>
         	{{ for (var i=0;i<it.length;i++ ){ }} 	
-    			<li class="fl ml20"  >
+    			<li class="pt20" >
+                
                 <a href="{{=it[i].url}}">
-                	<p class="fl mr10">{{=it[i].title}}</p>
-					<p class="fl mr30">{{=it[i].descript}}</p>
+                	<p class="pl20">{{=it[i].title}}</p>
+					<!--p class="fl mr30">{{=it[i].descript}}</p-->
                 </a>
+                <p class="pl20" style="font-size:14px">{{=it[i].descript}}</p>
+                <p class="pl20" style="font-size:13px">
+                    <span ><a style="color:green" href="{{=it[i].url}}">{{=it[i].url}}</a></span>
+                    <span class="pl40">{{=it[i].updateTime}}</span></p>
 				</li>
+                
 			 {{ } }}
 			 </ul>
 		</script>
@@ -260,7 +266,7 @@
 					    },
 					    success: function(data) {
 					        //alert(1);
-					        alert(JSON.stringify(data));
+					        //alert(JSON.stringify(data));
                             var arrText1 = doT.template($("#list1").text());
                             $(".searchArticle").html(arrText1(data.response.docs));
 
