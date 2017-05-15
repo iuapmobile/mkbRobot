@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>智能问答</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no, email=no"/>
+    <link rel="stylesheet" href="../../css/iuapmobile.um.css">
+    <link rel="stylesheet" href="../../css/common.css"/>
+    <link rel="stylesheet" href="./robot.css"/>
+
+	<!--菜单类型-->
+    <script id="menuTmpl" type="text/x-dot-template">
+        <div class="chat-item-text ">
+            <div class="multiSelect-header">{{= it.text}}</div>
+            <div class="multiSelect-content-box">
+                {{~it.list :menuValue:menuindex}}
+                <div class="multiSelect-content-item um-text-overflow {{=(menuindex>4)?'newsindex_4 none':''}}" onclick="clickResponseUrl('{{= menuValue.detailurl}}')">
+                    {{= menuindex+1+'.'}}{{= menuValue.info}}
+                </div>
+                {{~}}
+            </div>
+            {{?it.list.length>4}}
+            	<div class="listmore" onclick="showmore(this)">更多>></div>
+             {{?}}       
+        </div>
+    </script>
+    <!--列表类型-->
+    <script id="multiSelectTmpl" type="text/x-dot-template">
+        <div class="chat-item-text ">
+            <div class="multiSelect-header">您是想问</div>
+            <div class="multiSelect-content-box">
+                {{~it.docs :value:index}}
+
+                <div class="multiSelect-content-item um-text-overflow"
+                     onclick="clickResponseUrl('{{= value.url}}','{{=value.title}}')">
+                    {{=index+1}}.{{=value.title}}
+                </div>
+  
+                {{~}}
+            </div>
+        </div>
+    </script>
+    <!--新闻类型-->
+    <script id="newsTmpl" type="text/x-dot-template">
+        <div class="chat-item-text ">
+            <div class="multiSelect-header">{{=it.text}}</div>
+            <div class="multiSelect-content-box">
+                {{~it.list :newsValue:newsindex}}
+               
+                <div class="multiSelect-content-item um-text-overflow {{=(newsindex>4)?'newsindex_4 none':''}}"
+                     onclick="clickResponseUrl('{{=newsValue.detailurl}}')">
+                    {{= newsindex+1+'.'}}{{=newsValue.article}}
+                </div>
+                {{~}}
+            </div>
+            {{? it.list.length>4}}
+            	<div class="listmore" onclick="showmore(this)">更多>></div>
+             {{?}}
+        </div>
+    </script>
+</head>
+<body>
+<div class="Hcontent" >
+	<div class="robotPhoto">
+		<img src="../../image/robot/robot.png"  width=40 height=45 alt="" />
+	</div>
+	  <div class="robotContent">  
+		<div class="um-win" id="main">
+    <div class="um-header">
+        <h3 class="headSpan">我要提问</h3>
+    </div>
+    <div class="um-content p5" id="content">
+        <div id="convo">
+            <ul class="chat-thread" id="chat-thread">
+            	<!--现实历史信息-->
+                <script id="chatHistoryTmpl" type="text/x-dot-template">
+                    {{~it.data :value:index }}
+                    {{? value.role=='0' && value.chat.code=='100000'}}
+                    <li class="left-item">
+
+                        <img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
+
+                        <div class="chat-item-text">{{= formatText(value.chat.text)}}</div>
+                    </li>
+                    {{?? value.role=='0' &&  value.chat.code=='110000'}}
+                    <li class="left-item multiSelect-response">
+                        <img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
+
+                        <div class="chat-item-text ">
+                            <div class="multiSelect-header">您是想问</div>
+                            <div class="multiSelect-content-box">
+                                {{~value.chat.answers :answersValue:answersIndex}}
+                                {{? answersValue.code == 100000}}
+                                <div class="multiSelect-content-item um-text-overflow">
+                                    {{= formatText(answersValue.text)}}
+                                </div>
+                                {{?? answersValue.code == 200000}}
+                                <div class="multiSelect-content-item um-text-overflow"
+                                     onclick="clickResponseUrl('{{= answersValue.url}}')">
+                                    {{= answersValue.text}}
+                                </div>
+                                {{?}}
+                                {{~}}
+                            </div>
+                        </div>
+                    </li>
+                    {{?? value.role=='0' &&  value.chat.code=='200000' }}
+                    <li class="left-item img-response">
+                        <img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
+
+                        <div class="chat-item-text " onclick="clickResponseUrl('{{= value.chat.url}}')">{{=
+                            value.chat.text}}
+                        </div>
+                    </li>
+                    {{?? value.role=='0' &&  value.chat.code=='302000' }}
+                    <li class="left-item multiSelect-response">
+                        <img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
+
+                        <div class="chat-item-text ">
+                            <div class="multiSelect-header">{{= value.chat.text}}</div>
+                            <div class="multiSelect-content-box">
+                                {{~value.chat.list :newsValue:newsindex}}
+                                <div class="multiSelect-content-item um-text-overflow  {{=(newsindex>4)?'newsindex_4 none':''}}"
+                                     onclick="clickResponseUrl('{{= newsValue.detailurl}}')">
+                                    {{= newsValue.article}}
+                                </div>
+                                {{~}}
+                            </div>
+				            {{? value.chat.list.length>4}}
+				            	<div class="listmore" onclick="showmore(this)">更多>></div>
+				             {{?}}
+                        </div>
+                    </li>
+                    {{?? value.role=='0' &&  value.chat.code=='308000' }}
+                    <li class="left-item multiSelect-response">
+                        <img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/>
+
+                        <div class="chat-item-text ">
+                            <div class="multiSelect-header">{{= value.chat.text}}</div>
+                            <div class="multiSelect-content-box">
+                                {{~value.chat.list :menuValue:menuindex}}
+                                <div class="multiSelect-content-item um-text-overflow  {{=(newsindex>4)?'newsindex_4 none':''}}"
+                                     onclick="clickResponseUrl('{{= menuValue.detailurl}}')">
+                                    {{= menuValue.info}}
+                                </div>
+                                {{~}}
+                            </div>
+				           	{{? value.chat.list.length>4}}
+				            	<div class="listmore" onclick="showmore(this)">更多>></div>
+				             {{?}}
+                        </div>
+                    </li>
+                    {{?? value.role=='1'}}
+                    <li class="right-item">
+                        {{? typeof it.headerPath == 'string'}}
+                        <img src="{{= it.headerPath}}" alt=""/>
+                        {{??}}
+                        <span class="img-name" style="{{= it.headerPath.bgc}}">{{= it.headerPath.content}}</span>
+                        {{?}}
+                        <div class="chat-item-text">{{= formatText(value.chat.info)}}</div>
+                    </li>
+                    {{?}}
+                    {{~}}
+                </script>
+            </ul>
+            <div class="chat-tips-box">
+                <span class="chat-tips">没有想要的，<span class="search-for-hr" onclick="goFeedback()">请点击我</span></span>
+            </div>
+        </div>
+
+    </div>
+    <div class="um-footer">
+        <div class="common-tips-container">
+            <ul class="common-tips-box clearfix">
+                <li class="common-tips-item" onclick="commonQuestion('入职报到')">
+                    入职报到
+                </li>
+                <li class="common-tips-item" onclick="commonQuestion('新闻')">
+                    新闻
+                </li>
+                <li class="common-tips-item" onclick="commonQuestion('公积金支取')">
+                    公积金
+                </li>
+               <!--  <li class="common-tips-item" onclick="commonQuestion('开证明')">
+                    开证明
+                </li> -->
+            </ul>
+        </div>
+         <div class="chat-input-box">
+            <img src="../../image/robot/speech.png" alt="" class="change-input-type" data-flag='speech'/>
+        
+            <div class="show-input">
+                <input type="text" class="form-control chat-input" placeholder="亲,有什么想要问我的吗?"/>
+                <button class="btn chat-send">发送</button>
+            </div>
+            <div class="show-speech none" onclick="speechToString()">
+                点击 说话
+            </div>
+        
+        </div>
+
+    </div>
+</div>
+  	</div>  
+	
+	<div class="searchContent"  style="overflow:hidden;width:835px">
+			<div class="fl"  >
+				<img src="../../image/robot/iuap_logo.png" height=40 class="fl" alt="" />
+			</div>
+			<input type="text" class="searchbox fl" / id="searchbox" style="position: relative; padding:5px;"  >
+			<div class="fl searchButton" id="searchButton" style="">
+				<p class=""> search</p>
+			</div>
+	</div>
+	<div class="searchArticle">
+		
+	</div>
+	 
+</div>
+<script id="list1" type="text/x-dot-template"> 
+			<ul>
+        	{{ for (var i=0;i<it.length;i++ ){ }} 	
+    			<li class="pt20" >
+                
+                <a href="{{=it[i].url}}">
+                	<p class="pl20">{{=it[i].title}}</p>
+					<!--p class="fl mr30">{{=it[i].descript}}</p-->
+                </a>
+                <p class="pl20" style="font-size:14px">{{=it[i].descript}}</p>
+                <p class="pl20" style="font-size:13px">
+                    <span ><a style="color:green" href="{{=it[i].url}}">{{=it[i].url}}</a></span>
+                    <span class="pl40">{{=it[i].updateTime}}</span></p>
+				</li>
+                
+			 {{ } }}
+			 </ul>
+		</script>
+<script type="text/javascript" src="../../js/public/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="../../js/public/summer.js"></script>
+<script type="text/javascript" src="../../js/public/doT.min.js"></script>
+<script type="text/javascript" src="../../js/public/layer_mobile/layer.js"></script>
+<script src="data.js"></script>
+<script src="robot.js"></script>
+<script>
+	$('.robotPhoto').on('click',function(e){
+		//$("#main").removeClass('none');
+		$(e.currentTarget).next().toggleClass('active').slideToggle();
+		
+	});
+	$(function(){
+			        $("#searchButton").on("click", function() {
+					  var content = $('#searchbox').val();
+					  console.log(content);
+					  $.ajax({
+					    type: "get",
+                        dataType: "json",
+					    url2: "http://172.27.35.3:8080/solr/mycore1/select",
+                        url: "http://127.0.0.1:8080/solr/mycore1/select",
+					    data: {
+					    	indent:"on",
+					    	q: !content?"*:*":content,
+					    	wt:"json"
+					    },
+					    success: function(data) {
+					        //alert(1);
+					        //alert(JSON.stringify(data));
+                            var arrText1 = doT.template($("#list1").text());
+                            $(".searchArticle").html(arrText1(data.response.docs));
+
+					    },
+					    error:function(res){
+					    	var data = data_demo;
+					    	var arrText1 = doT.template($("#list1").text());
+                            $(".searchArticle").html(arrText1(data.response.docs));
+					    } 
+					  });
+					
+					}); 
+			$("#searchButton1").on("click", function() {
+					  var arrText1 = doT.template($("#list1").text());
+                      $(".searchArticle").html(arrText1(data.response.docs));
+					 
+		   });
+	});
+	var data_demo={
+		  "responseHeader":{
+		    "status":0,
+		    "QTime":75,
+		    "params":{
+		      "q":"*1*",
+		      "indent":"on",
+		      "wt":"json"}},
+		  "response":{"numFound":6,"start":0,"docs":[
+		      {
+		        "createTime":"2015-05-12 10:27:02.0",
+		        "author":"边传猛",
+		        "updateTime":"2015-10-12 10:34:19.0",
+		        "id":1,
+		        "title":"元数据管理工具功能简介",
+		        "descript":"dd",
+		        "url":"http://udn.yyuap.com/doc/ae/1507337.html",
+		        "_version_":1567172666768490496},
+		      {
+		        "createTime":"2017-05-12 10:27:02.0",
+		        "updateTime":"2017-05-12 10:34:19.0",
+		        "id":2,
+		        "title":"emm_portal单点登录模块应用",
+		        "descript":"dd",
+		        "url":"http://udn.yyuap.com/forum.php?mod=viewthread&tid=30791",
+		        "_version_":1567172666820919296},
+		      {
+		        "createTime":"2017-05-12 10:34:19.0",
+		        "author":"段丽霞",
+		        "updateTime":"2017-05-12 10:34:19.0",
+		        "id":3,
+		        "title":"数据处理平台产品API文档",
+		        "descript":"知识库>产品API文档",
+		        "url":"http://udn.yyuap.com/doc/ae/920513.html",
+		        "_version_":1567172666823016448},
+		      {
+		        "createTime":"2017-05-12 11:15:51.0",
+		        "updateTime":"2017-05-12 11:15:51.0",
+		        "id":4,
+		        "title":"高稳定性高并发全平台社交聊天IM对外合作支持源码",
+		        "descript":"成熟的消息收发确认机制，支持万人大群\n\n支持开发自定义的消息sdk接口，扩展性超强\n\n支持单/群聊，支持红包/文件等功能模块 支持朋友圈分享等功能\n\n同步增加商城/H5应用/附近的人/等模块化功能",
+		        "url":"http://udn.yyuap.com/forum.php?mod=viewthread&tid=146729",
+		        "_version_":1567172666827210752},
+		      {
+		        "createTime":"2017-05-12 11:17:47.0",
+		        "updateTime":"2017-05-12 11:17:47.0",
+		        "id":5,
+		        "title":"iUAP Mobile 移动开发工具（稳定版v2.5.1）下载",
+		        "descript":"此文件较大，约688M，请使用web端下载，谢谢",
+		        "url":"http://udn.yyuap.com/forum.php?mod=viewthread&tid=33279",
+		        "_version_":1567172666830356480},
+		      {
+		        "createTime":"2017-05-12 11:38:27.0",
+		        "updateTime":"2017-05-12 11:38:27.0",
+		        "id":6,
+		        "title":"DI常见问题",
+		        "descript":"1.1.     作业 调度： 如何并行 执行 ？1.2.     表输出：如何 自动创建表 ？1.3.     作业 调度 ：如何 设置转换无效 ？",
+		        "url":"http://udn.yyuap.com/doc/ae/919180.html",
+		        "_version_":1567172666832453632}]
+		  }}
+	
+</script>
+</body>
+</html>
