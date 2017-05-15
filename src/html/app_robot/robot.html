@@ -15,15 +15,19 @@
 		<!--列表类型-->
 	    <script id="multiSelectTmpl" type="text/x-dot-template">
 	        <div class="chat-item-text ">
-	            <div class="multiSelect-header">您是想问</div>
+	        	{{if(it.numFound == 0){}}
+	        	<div class="multiSelect-header">很抱歉，未找到搜索结果，建议您重新输入关键词</div>
+	        	{{ }else{ }}
+	            <div class="multiSelect-header">为您找到以下数据</div>
 	            <div class="multiSelect-content-box">
 	                {{~it.docs :value:index}}
 	                <div class="multiSelect-content-item um-text-overflow"
 	                     onclick="clickResponseUrl('{{= value.url}}')">
-	                    {{=index}}:{{=value.title}}
+	                    {{=index+1}}.{{=value.title}}
 	                </div>
 	                {{~}}
 	            </div>
+	            {{ } }}
 	        </div>
 	    </script>
 		<div class="searchContent">
