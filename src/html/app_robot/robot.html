@@ -21,10 +21,10 @@
 	            <div class="multiSelect-header">为您找到以下数据</div>
 	            <div class="multiSelect-content-box">
 	                {{~it.docs :value:index}}
-	                <div class="multiSelect-content-item um-text-overflow"
+	                <a class="multiSelect-content-item um-text-overflow"
 	                     onclick="clickResponseUrl('{{= value.url}}')">
 	                    {{=index+1}}.{{=value.title}}
-	                </div>
+	                </a>
 	                {{~}}
 	            </div>
 	            {{ } }}
