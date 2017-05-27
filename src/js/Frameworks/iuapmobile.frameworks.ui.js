@@ -5,6 +5,7 @@
  * Version: 3.0.0.20161028.1108
  */ 
 var UM = UM || {};
+UM.MKBURL = "http://127.0.0.1:8080/solr/";
 UM.UI = UM.UI || {};
 
 UM.UI.eventType = UM.UI.eventType || {

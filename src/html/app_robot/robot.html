@@ -21,29 +21,36 @@
 	            <div class="multiSelect-header">为您找到以下数据</div>
 	            <div class="multiSelect-content-box">
 	                {{~it.docs :value:index}}
-	                <a class="multiSelect-content-item um-text-overflow"
+	                <div class="multiSelect-content-item um-text-overflow"
 	                     onclick="clickResponseUrl('{{= value.url}}')">
 	                    {{=index+1}}.{{=value.title}}
-	                </a>
+	                </div>
 	                {{~}}
 	            </div>
 	            {{ } }}
 	        </div>
 	    </script>
-		<div class="searchContent">
-				<div class="s_form">
+		<div class="searchContent p10">
+				<div class="s_form um-hbox">
 					<div class="fl"  >
 						<img src="../../image/robot/iuap_logo.png" height=40 class="fl" alt="" />
 					</div>
-					<input type="text" class="searchbox fl" id="searchbox" style="position: relative; padding:5px;" >
+					<input type="text" class="searchbox um-bf1 fl" id="searchbox" style="max-width:460px;position: relative; padding:5px;" value="移动开发平台中的列表如何开发">
 					<div class="fl searchButton" id="searchButton" style="">
 						<p class="">
 							search
 						</p>
 					</div>
+					<label class="um-switch1">
+	                    	<input id="sa" type="checkbox" value="off" onchange="alert(this.checked?'开启':'关闭')">
+	                    	<div class="um-track">
+	                    		<div class="um-handle">
+	                    		</div>
+	                    	</div>
+	                    </label>
 				</div>
 
-			</div>
+		</div>
 		<div class="Hcontent" >
 			<div class="robotPhoto">
 				<img src="../../image/robot/robot.png"  width=40 height=45 alt="" />
@@ -119,7 +126,7 @@
 			{{ } }}
 			</ul>
 		</script>
-		<script type="text/javascript" src="../../js/public/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../../js/public/jquery.min.js"></script>
 		<script type="text/javascript" src="../../js/public/summer.js"></script>
 		<script type="text/javascript" src="../../js/public/doT.min.js"></script>
 		<script type="text/javascript" src="../../js/public/layer_mobile/layer.js"></script>
@@ -135,20 +142,23 @@
 			$(function() {
 				$("#searchButton").on("click", function() {
 					var content = $('#searchbox').val();
+					var sa = $('#sa').get(0).checked;
 					console.log(content);
 					$.ajax({
 						type : "get",
 						dataType : "json",
-						url2 : "http://172.27.35.3:8080/solr/mycore1/select",
-						url : "http://127.0.0.1:8080/solr/mycore1/select",
+						//url2 : "http://172.27.35.3:8080/solr/mycore1/select",
+						//url3 : "http://127.0.0.1:8080/solr/mycore1/select",
+						url : "http://127.0.0.1:8080/solr/mkb/s",
 						data : {
 							indent : "on",
-							q : !content ? "*:*" : content,
-							wt : "json"
+							q : content,
+							wt : "json",
+							sa: sa
 						},
 						success : function(data) {
 							//alert(1);
-							alert(JSON.stringify(data));
+							//alert(JSON.stringify(data));
 							var arrText1 = doT.template($("#list1").text());
 							$(".searchResult").html(arrText1(data.response.docs));
 
