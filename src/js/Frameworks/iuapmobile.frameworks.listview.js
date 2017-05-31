@@ -1,14 +1,8 @@
-/*
- * Summer UI JavaScript Library
- * Copyright (c) 2016 yonyou.com
- * Author: gct@yonyou.com
- * Version: 3.0.0.20160805
- */ 
 ( typeof require == "function") && require.config({
 	baseUrl : 'js',
 	paths : {
 		jquery : "jquery-2.1.4.min",
-		UM : "Frameworks/iuapmobile.frameworks.core"
+		UM : "Frameworks/iuapmobile.frameworks.core-2.7.0"
 	}
 }); ( function(global, factory) {
 		if ( typeof module === "object" && typeof module.exports === "object") {
@@ -217,7 +211,7 @@
 					if (self.config.pullDownEnable && self._pullDirection == 'down') {
 						if (!!self._$domResult) {
 							self._$domResult.css({
-								'height' : 40
+								'height' : 50
 							})
 						}
 						this.isPulling = true;
@@ -227,7 +221,7 @@
 					} else if (self.config.pullUpEnable && self._pullDirection == 'up') {
 						if (!!self._$domResult) {
 							self._$domResult.css({
-								'height' : 40
+								'height' : 50
 							})
 						}
 						this.isPulling = true;
@@ -252,17 +246,17 @@
 					domClass : 'um-listview-up',
 					domRefresh : '<div class="um-listview-refresh">↓下拉刷新</div>',
 					domUpdate : '<div class="um-listview-update">↑释放更新</div>',
-					domLoad : '<div class="um-listview-load"><div class="um-listview-loader"><span></span><span></span><span></span><span></span></div><div class="pullDownLabel">Loading...</div></div>'
+					domLoad : '<div class="um-listview-load"><span class="pullLoading"></span>加载中...</div>'
 				},
 				domDown : {
 					domClass : 'um-listview-down',
 					domRefresh : '<div class="um-listview-refresh">↑上拉加载更多</div>',
 					domUpdate : '<div class="um-listview-update">↓释放加载</div>',
-					domLoad : '<div class="um-listview-load"><div class="um-listview-loader"><span></span><span></span><span></span><span></span></div><div class="pullDownLabel">Loading...</div></div>'
+					domLoad : '<div class="um-listview-load"><span class="pullLoading"></span>加载中...</div>'
 				},
 				hasItemMenu : true,
 				showLoadingBar : true,
-				pullDistance : 40, // 拉动距离,单位为px
+				pullDistance : 50, // 拉动距离,单位为px
 				tapHoldTime : 500, //长按事件多久之后触发，单位为ms
 				itemDeleteAnimateTime : 500
 			}, options);
