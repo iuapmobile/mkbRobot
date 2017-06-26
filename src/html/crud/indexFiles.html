@@ -14,22 +14,23 @@
 			var json;
 			var viewModel;
 			$(function() {
-				debugger
-				console.log(UM.MKBURL);
+				console.log(KBCONFIG.MKBURL);
 				init();
-				$("#btnSave").on("click", function(){
+				$("#btnDel").on("click", function(){
 					debugger;
+					
 					//alert(123);
-
+					if(!confirm("真的要导入并索引吗？")){
+						return;
+					}
 					$.ajax({
-				        url:KBCONFIG.MKBURL + '/mkb/add',
-			
+				        url:KBCONFIG.MKBURL + '/indexFiles',
 				        data: viewModel(),
 				        type:'post',
 				        dataType:'json',
 				        success:function(data){
-				            alert("创建成功");//弹窗
-				 
+				            alert("导入成功");//弹窗
+				 			alert(JSON.stringify(data));//弹窗
 				            //TODO ........
 				 
 				        },
@@ -46,12 +47,16 @@
 				//debugger;
 
 				viewModel = ko.observable({
-					"title" : "移动开发",
-					"descript" : "iuapmobile是一款优秀的移动开发平台",
-					"descriptImg" : "http://mobile.yyuap.com/res/images/index/banner_2.jpg",
-					"url" : "http://mobile.yyuap.com",
-					"keywords" : "iuapmobile,移动开发",
-					"tag": "移动"
+					"path" : "",
+					"url":"",
+					"excelPath":"/Users/gct/work2/iuapkb/培训部提供在线文档资源.xlsx",
+					"rootPath":"/Users/gct/work2/iuapkb",
+					"ip" : "127.0.0.1",
+					"port" : "3306",
+					"dbusername" : "root",
+					"dbpassword" : "1234qwer",
+					"dbname" : "iuapkb",
+					"tablename" : "kbindexinfo"
 				});
 				ko.applyBindings(viewModel);
 			}
@@ -63,7 +68,7 @@
 			<div class="um-header" >
 				<a href="../../index.html" class="um-back"> 返回</a>
 				<h3>索引录入</h3>
-				<a id="btnSave" href="#" class="um-header-right ti-save"></a>
+				<a id="btnDel" href="#" class="um-header-right ti-delete">导入PDF索引</a>
 			</div>
 			<div class="um-content p10">
 				<ul class="um-list">
@@ -71,10 +76,10 @@
 						<div class="um-list-item">
 							<div class="um-list-item-inner">
 								<div class="um-list-item-left">
-									标题
+									文件物理路径
 								</div>
 								<div class="um-list-item-right">
-									<input type="text" class="form-control" placeholder="请输入标题" data-bind="value:title">
+									<input type="text" class="form-control" placeholder="请输入路径" data-bind="value:path">
 								</div>
 							</div>
 						</div>
@@ -83,10 +88,10 @@
 						<div class="um-list-item">
 							<div class="um-list-item-inner">
 								<div class="um-list-item-left">
-									描述
+									文件的在线url
 								</div>
 								<div class="um-list-item-right">
-									<input type="text" class="form-control" placeholder="请输入描述" data-bind="value:descript">
+									<input type="text" class="form-control" placeholder="请输入文件的在线url" data-bind="value:url">
 								</div>
 							</div>
 						</div>
@@ -95,10 +100,10 @@
 						<div class="um-list-item">
 							<div class="um-list-item-inner">
 								<div class="um-list-item-left">
-									描述图片url
+									excel清单文件路径
 								</div>
 								<div class="um-list-item-right">
-									<input type="text" class="form-control" placeholder="请输入描述图片url" data-bind="value:descriptImg">
+									<input type="text" class="form-control" placeholder="请输入Excel清单路径" data-bind="value:excelPath">
 								</div>
 							</div>
 						</div>
@@ -107,10 +112,10 @@
 						<div class="um-list-item">
 							<div class="um-list-item-inner">
 								<div class="um-list-item-left">
-									url
+									文件物理根路径
 								</div>
 								<div class="um-list-item-right">
-									<input type="text" class="form-control" placeholder="请输入url" data-bind="value:url">
+									<input type="text" class="form-control" placeholder="请输入Excel清单路径" data-bind="value:rootPath">
 								</div>
 							</div>
 						</div>
@@ -119,10 +124,10 @@
 						<div class="um-list-item">
 							<div class="um-list-item-inner">
 								<div class="um-list-item-left">
-									关键词
+									服务器IP
 								</div>
 								<div class="um-list-item-right">
-									<input type="text" class="form-control" placeholder="请输入描述关键词" data-bind="value:keywords">
+									<input type="text" class="form-control" placeholder="请输入服务器ip" data-bind="value:ip">
 								</div>
 							</div>
 						</div>
@@ -131,89 +136,51 @@
 						<div class="um-list-item">
 							<div class="um-list-item-inner">
 								<div class="um-list-item-left">
-									标签
+									服务器端口
 								</div>
 								<div class="um-list-item-right">
-									<input type="text" class="form-control" placeholder="请输入标签" data-bind="value:tag">
+									<input type="text" class="form-control" placeholder="请输入端口" data-bind="value:port">
 								</div>
 							</div>
 						</div>
 					</li>
-
-
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									用户
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入用户名" data-bind="value:dbusername">
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									密码
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入密码" data-bind="value:dbpassword">
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									数据库名称
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入数据库名称" data-bind="value:dbname">
+								</div>
+							</div>
+						</div>
+					</li>
 					
-					<li>
-						<div class="um-list-item">
-							<div class="um-list-item-inner">
-								<div class="um-list-item-left">
-									标签
-								</div>
-								<div class="um-list-item-right">
-									<label class="um-switch1">
-										<input type="checkbox" value="on" checked="checked">
-										<div class="um-track">
-											<div class="um-handle">
-											</div>
-										</div>
-									</label>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="um-list-item">
-							<div class="um-list-item-inner">
-								<div class="um-list-item-left">
-									成交时间
-								</div>
-								<div class="um-list-item-right">
-									<input type="date" name="date" class="form-control">
-								</div>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="um-list-item">
-							<div class="um-list-item-inner">
-								<div class="um-list-item-left">
-									成交数量
-								</div>
-								<div class="um-list-item-right">
-									<input type="number" value="31" class="form-control">
-								</div>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="um-list-item">
-							<div class="um-list-item-inner">
-								<div class="um-list-item-left">
-									url
-								</div>
-								<div class="um-list-item-right">
-									<label class="um-switch1">
-										<input type="checkbox" value="on" checked="checked" data-bind="value:descript">
-										<div class="um-track">
-											<div class="um-handle">
-											</div>
-										</div>
-									</label>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="um-list-item">
-							<div class="um-list-item-inner" style="height:auto;">
-								<div class="um-list-item-left" style="-webkit-box-align:start;align-self: flex-start;">
-									备注
-								</div>
-								<div class="um-list-item-right">
-									<textarea name="" id="" cols="30" rows="1" class="form-control" style="padding:9px 0px">这里可以备注</textarea>
-								</div>
-							</div>
-						</div>
-					</li>
 				</ul>
 			</div>
 		</div>

@@ -15,33 +15,32 @@
 		<!--列表类型-->
 		<script id="multiSelectTmpl" type="text/x-dot-template">
 			<div class="chat-item-text ">
-				{{if(it.botResponse != null){}}
-					<div class="multiSelect-header">{{= it.botResponse.text }}</div>
-				
-					{{if(it.botResponse.code == 200000){}}
-						<div class="multiSelect-content-box"><a href="{{= it.botResponse.url}}">点击这儿打开查看:)</a></div>
-					{{}}}
+			{{if(it.numFound == 0){}}
+				<!--div class="multiSelect-header">很抱歉，未找到搜索结果，建议您重新输入关键词</div-->
+				<div class="multiSelect-header">{{= it.botResponse.text }}</div>
+				{{if(it.botResponse.code == 200000){}}
+					<div class="multiSelect-content-box"><a href="{{= it.botResponse.url}}">点击这儿打开查看:)</a></div>
 				{{}}}
-				{{if(it.numFound > 0){}}
-					<div class="multiSelect-header" style="padding-top:10px">我猜您关心的问题是以下几个:</div>
-					<div class="multiSelect-content-box">
-					{{~it.docs :value:index}}
-						<div class="multiSelect-content-item um-text-overflow"
-						onclick="clickResponseUrl('{{= value.url}}', '{{= value.descript}}')">
-						{{=index+1}}.{{=value.title}}
-						</div>
-					{{~}}
-					</div>
-				{{}}}
+			{{ }else{ }}
+			<div class="multiSelect-header">您可以看看这些</div>
+			<div class="multiSelect-content-box">
+			{{~it.docs :value:index}}
+			<div class="multiSelect-content-item um-text-overflow"
+			onclick="clickResponseUrl('{{= value.url}}')">
+			{{=index+1}}.{{=value.title}}
+			</div>
+			{{~}}
+			</div>
+			{{ } }}
 			</div>
 		</script>
 		<div>
 			<div class="robotPhoto">
-				<img src="../../image/common/robotl.png"  width=40 height=45 alt="" />
+				<img src="../../image/robot/robot.png"  width=40 height=45 alt="" />
 			</div>
 			<div class="robotContent">
 				<div class="um-win" id="main">
-					<div class="um-header" style="display:none">
+					<div class="um-header">
 						<h3 class="headSpan"></h3>
 						<a id="btnBack" href="#" class="um-back" style="display:none" onclick="closeW()"></a>
 					</div>
@@ -86,7 +85,7 @@
 						<input type="text" class="fl form-control" id="searchbox" style="position: relative; padding:5px;" value="移动开发平台中的列表如何开发">
 					</div>
 					<button class="um-btn btn-inline" id="searchButton">智能搜索</button>
-					<label class="um-switch1" style="display:none">
+					<label class="um-switch1">
 						<input id="sa" type="checkbox" value="off" onchange="alert(this.checked?'开启':'关闭')">
 						<div class="um-track">
 							<div class="um-handle"></div>
@@ -152,7 +151,7 @@
 				var dmobile = navigator.userAgent.match(/AppleWebKit.*Mobile.*/);
 				
 				if(!!dmobile){
-					$(".robotContent").hide();
+
 				}else{
 					//$(".robotContent")[0].attr("display","none");	
 					$(".robotContent").hide();
@@ -172,7 +171,6 @@
 							q : content?content:"*:*",
 							wt : "json",
 							sa : sa,
-							apiKey : "8001",
 							deviceType: "pc"
 						},
 						success : function(data) {

@@ -139,10 +139,6 @@ var __buserid = (new Date()).valueOf();//实际开发是是用户的唯一标识
 console.log(__buserid)
 //调用数据请求接口
 function getRobotResponse(text) {
-
-
-
-
     var $li = $('<li class="left-item"> <img src="../../image/common/robotl.png" alt="" onclick="goRobotDetail()"/> <div class="chat-item-text">正在输入...</div> </li>')
     $('#chat-thread').append($li);
     var top = $('#convo').height();
@@ -150,16 +146,6 @@ function getRobotResponse(text) {
         scrollTop: top
     }, 300);
 	
-
-    var selfRet = SelfProcesser.process(text)
-    if(selfRet){
-       
-        renderRobotResponse(selfRet, $li);
-        return;
-    }
-
-
-
     //storageRobotResponse(robotData);
     
     $.ajax({
@@ -173,7 +159,7 @@ function getRobotResponse(text) {
 			wt : "json",
             deviceType: "mobile",
             bot: "true",
-            apiKey : "8001",
+            apiKey : "8002",
             buserid: __buserid
 		},
 		success : function(data) {

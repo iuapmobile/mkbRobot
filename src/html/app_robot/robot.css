@@ -80,7 +80,7 @@
 }
 
 .chat-thread li.left-item {
-
+	width: 80%;
 	float: left;
 	color: #343434;
 	background-color: #fff;
@@ -115,6 +115,7 @@
 	width: 90%;
 }
 .chat-tips-box {
+	display: none;
 	width: 100%;
 	text-align: center;
 	margin-top: 10px;
@@ -143,7 +144,7 @@
 }
 /*多选项样式修改*/
 .multiSelect-response {
-	width: 70%;
+	width: 80%;
 }
 .chat-thread .img-response .chat-item-text {
 	color: #1BAEDE;
@@ -263,7 +264,7 @@
 
 .robotContent {
 	overflow: hidden;
-	display: none;
+	/*display: none;*/
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -282,7 +283,7 @@ html, body {
 	background:#ffffff;
 }
 .Hcontent{
-	min-width:375px;
+	min-width:320px;
 	max-width:980px;
 	margin: 0 auto;
 	overflow: auto;

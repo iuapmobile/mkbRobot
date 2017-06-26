@@ -344,7 +344,7 @@
     w.api = w.summer;
     (function(){
 		try{
-			if($summer.os =="pc" && document.location.href.toLocaleString().indexOf("http")<0){
+			if(!summer.disabled || $summer.os =="pc" && document.location.href.toLocaleString().indexOf("http")<0){
 				document.addEventListener('DOMContentLoaded',function(){
 					if(typeof summerready == "function")
 						summerready();
