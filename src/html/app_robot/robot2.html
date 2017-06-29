@@ -27,7 +27,7 @@
 					<div class="multiSelect-content-box">
 					{{~it.docs :value:index}}
 						<div class="multiSelect-content-item um-text-overflow"
-						onclick="clickResponseUrl('{{= value.url}}', '{{= value.descript}}')">
+						onclick="clickResponseUrl('{{= value.url}}', '{{= value.id}}')">
 						{{=index+1}}.{{=value.title}}
 						</div>
 					{{~}}
@@ -37,7 +37,7 @@
 		</script>
 		<div>
 			<div class="robotPhoto">
-				<img src="../../image/common/robotl.png"  width=40 height=45 alt="" />
+				<img src="../../img/robot.jpg"  width=40 height=45 alt="" />
 			</div>
 			<div class="robotContent">
 				<div class="um-win" id="main">
@@ -151,12 +151,14 @@
 				console.log($summer.os);
 				var dmobile = navigator.userAgent.match(/AppleWebKit.*Mobile.*/);
 				
+				/*
 				if(!!dmobile){
 
 				}else{
 					//$(".robotContent")[0].attr("display","none");	
 					$(".robotContent").hide();
 				}
+				*/
 				$("#searchButton").on("click", function() {
 					var content = $('#searchbox').val();
 					var sa = $('#sa').get(0).checked;

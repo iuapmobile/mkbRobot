@@ -45,9 +45,17 @@ function renderChatHistory() {
 }
 
 //欢迎语
-function sayhello(val) {
+function sayhello(id) {
     var $li = $('<li class="left-item"> <img src="../../image/common/robotl.png" alt=""  onclick="goRobotDetail()"/> <div class="chat-item-text ">您好，我是云平台雪儿，有什么问题都可以问我</div> </li>');
-    if(val){
+    if(id){
+        //根据id获取描述
+        var val = "";
+        for(var i=0, len=public_curAllData.length;i<len;i++){
+            if(public_curAllData[i].id == id){
+                val = public_curAllData[i].descript;
+                break;
+            }
+        }
         $li = $('<li class="left-item"> <img src="../../image/common/robotl.png" alt=""  onclick="goRobotDetail()"/> <div class="chat-item-text ">'+ val +'</div> </li>');
     }
     $('#chat-thread').append($li);
@@ -137,6 +145,8 @@ function storageUserTalk(text) {
 
 var __buserid = (new Date()).valueOf();//实际开发是是用户的唯一标识
 console.log(__buserid)
+
+window.public_curAllData = [];
 //调用数据请求接口
 function getRobotResponse(text) {
 
@@ -161,7 +171,7 @@ function getRobotResponse(text) {
 
 
     //storageRobotResponse(robotData);
-    
+    var _q = !text ? "*:*" : text;
     $.ajax({
 		type : "get",
 		dataType : "json",
@@ -169,7 +179,7 @@ function getRobotResponse(text) {
 		url : KBCONFIG.MKBURL + "/mkb/s",
 		data : {
 			indent : "on",
-			q : !text ? "*:*" : text,
+			q : _q,
 			wt : "json",
             deviceType: "mobile",
             bot: "true",
@@ -177,7 +187,8 @@ function getRobotResponse(text) {
             buserid: __buserid
 		},
 		success : function(data) {
-			//alert(1);
+            debugger;
+			public_curAllData = public_curAllData.concat(data.response.docs);
 			renderRobotResponse(data, $li);
 
 		},
@@ -187,6 +198,7 @@ function getRobotResponse(text) {
 		}
 	});
 }
+
 //渲染机器人单条回答
 function renderRobotResponse(data, $li) {
     //debugger;

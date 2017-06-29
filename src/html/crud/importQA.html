@@ -16,29 +16,27 @@
 			$(function() {
 				console.log(KBCONFIG.MKBURL);
 				init();
-				$("#btnDel").on("click", function(){
+				$("#btnImport").on("click", function(){
 					debugger;
-					if(!viewModel().path){
-						alert("请录入文件路径");
-						return;
-					}
+					
 					//alert(123);
-					if(!confirm("真的要导入 "+viewModel().path+" 吗？")){
+					if(!confirm("真的要导入并索引吗？")){
 						return;
 					}
 					$.ajax({
-				        url:KBCONFIG.MKBURL + '/importExcel2DB',
+				        url:KBCONFIG.MKBURL + '/importQA',
 				        data: viewModel(),
 				        type:'post',
 				        dataType:'json',
 				        success:function(data){
-				            alert("导入DB成功");//弹窗
-				 			alert(JSON.stringify(data));//弹窗
+				            alert("导入成功");
+				 			alert(JSON.stringify(data));
 				            //TODO ........
 				 
 				        },
 				        error:function(data){
-				             alert(JSON.stringify(data));//弹窗
+				        	alert("error");
+				            alert(JSON.stringify(data));
 				              //TODO ........
 				        }
 
@@ -50,16 +48,12 @@
 				//debugger;
 
 				viewModel = ko.observable({
-					"id" : "不需要",
-					"path" : "/Users/gct/work2/yycloudkb/智能问答＋智能搜索_数据录入--全部.xls",
-					//"type" : "qa",
-					"type" : "kbindex",
+					"path":"/Users/gct/work2/xueer/智能机器人_1.xlsx",
 					"ip" : "127.0.0.1",
 					"port" : "3306",
-					"dbusername" : "root",
-					"dbpassword" : "1234qwer",
-					"dbname" : "kbindexinfo"
-
+					"username" : "root",
+					"password" : "1234qwer",
+					"dbname" : "xueer"
 				});
 				ko.applyBindings(viewModel);
 			}
@@ -71,7 +65,7 @@
 			<div class="um-header" >
 				<a href="../../index.html" class="um-back"> 返回</a>
 				<h3>索引录入</h3>
-				<a id="btnDel" href="#" class="um-header-right ti-delete">导入DB</a>
+				<a id="btnImport" href="#" class="um-header-right ti-delete">导入PDF索引</a>
 			</div>
 			<div class="um-content p10">
 				<ul class="um-list">
@@ -79,19 +73,7 @@
 						<div class="um-list-item">
 							<div class="um-list-item-inner">
 								<div class="um-list-item-left">
-									id
-								</div>
-								<div class="um-list-item-right">
-									<input type="text" class="form-control" placeholder="请输入id" data-bind="value:id">
-								</div>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="um-list-item">
-							<div class="um-list-item-inner">
-								<div class="um-list-item-left">
-									Excel文件路径
+									文件物理路径
 								</div>
 								<div class="um-list-item-right">
 									<input type="text" class="form-control" placeholder="请输入路径" data-bind="value:path">
@@ -130,7 +112,7 @@
 									用户
 								</div>
 								<div class="um-list-item-right">
-									<input type="text" class="form-control" placeholder="请输入用户名" data-bind="value:dbusername">
+									<input type="text" class="form-control" placeholder="请输入用户名" data-bind="value:username">
 								</div>
 							</div>
 						</div>
@@ -142,7 +124,7 @@
 									密码
 								</div>
 								<div class="um-list-item-right">
-									<input type="text" class="form-control" placeholder="请输入密码" data-bind="value:dbpassword">
+									<input type="text" class="form-control" placeholder="请输入密码" data-bind="value:password">
 								</div>
 							</div>
 						</div>

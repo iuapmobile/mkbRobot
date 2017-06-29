@@ -51,7 +51,7 @@ function sayhello(id) {
         //根据id获取描述
         var val = "";
         for(var i=0, len=public_curAllData.length;i<len;i++){
-            if(public_curAllData[i].id == id){
+            if(public_curAllData[i] && public_curAllData[i].id == id){
                 val = public_curAllData[i].descript;
                 break;
             }
@@ -169,7 +169,7 @@ function getRobotResponse(text) {
 			wt : "json",
             deviceType: "mobile",
             bot: "true",
-            apiKey : "8002",
+            apiKey : "60f3deba47794a50a04f980046b31158",
             buserid: __buserid
 		},
 		success : function(data) {

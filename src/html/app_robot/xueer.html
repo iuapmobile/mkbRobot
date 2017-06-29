@@ -23,7 +23,7 @@
 					{{}}}
 				{{}}}
 				{{if(it.numFound > 0){}}
-					<div class="multiSelect-header" style="padding-top:10px">我猜您关心的问题是以下几个:</div>
+					<div class="multiSelect-header" style="padding-top:10px">另外，我猜您关心的问题是以下几个</div>
 					<div class="multiSelect-content-box">
 					{{~it.docs :value:index}}
 						<div class="multiSelect-content-item um-text-overflow"
@@ -37,9 +37,9 @@
 		</script>
 		<div>
 			<div class="robotPhoto">
-				<img src="../../image/common/robotl.png"  width=40 height=45 alt="" />
+				<img src="../../img/robot.jpg"  width=40 height=45 alt="" />
 			</div>
-			<div class="robotContent" style="display:">
+			<div class="robotContent">
 				<div class="um-win" id="main">
 					<div class="um-header" style="display:none">
 						<h3 class="headSpan"></h3>
@@ -76,7 +76,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="Hcontent um-win" style="display:none">
+		<div class="Hcontent um-win" >
 			<div class="searchContent p10 um-header">
 				<div class="um-box">
 					<div class=""  >
@@ -86,7 +86,7 @@
 						<input type="text" class="fl form-control" id="searchbox" style="position: relative; padding:5px;" value="移动开发平台中的列表如何开发">
 					</div>
 					<button class="um-btn btn-inline" id="searchButton">智能搜索</button>
-					<label class="um-switch1" style="display:none">
+					<label class="um-switch1">
 						<input id="sa" type="checkbox" value="off" onchange="alert(this.checked?'开启':'关闭')">
 						<div class="um-track">
 							<div class="um-handle"></div>
@@ -132,7 +132,7 @@
 		<script type="text/javascript" src="../../js/public/summer.js"></script>
 		<script type="text/javascript" src="../../js/public/doT.min.js"></script>
 		<script type="text/javascript" src="../../js/public/layer_mobile/layer.js"></script>
-		<script type="text/javascript" src="./robot.js"></script>
+		<script type="text/javascript" src="./xueer.js"></script>
 		<script type="text/javascript" src="data.js"></script>
 		<script type="text/javascript" src="../../js/public/kbconfig.js"></script>
 		<script>
@@ -153,7 +153,7 @@
 				
 				/*
 				if(!!dmobile){
-					$(".robotContent").hide();
+
 				}else{
 					//$(".robotContent")[0].attr("display","none");	
 					$(".robotContent").hide();
@@ -174,7 +174,6 @@
 							q : content?content:"*:*",
 							wt : "json",
 							sa : sa,
-							apiKey : "8001",
 							deviceType: "pc"
 						},
 						success : function(data) {
