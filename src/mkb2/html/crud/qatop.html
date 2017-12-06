@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../css/iuapmobile.um.css">
+		<link rel="stylesheet" href="../../css/font-icons.css">
+		<script src="../../js/public/jquery.min.js" ></script>
+		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
+		<script src="../../js/public/knockout.js" ></script>
+		<script type="text/javascript" src="../../js/public/kbconfig.js"></script>
+		
+		<script>
+			window.__yyuap_apiKey = "bc2b9ac6ea134eeb940bb1ec43ff3a5a";//云市场
+
+
+			$(function() {
+				debugger
+				console.log(UM.MKBURL);
+
+				$("#btnSave").on("click", function(){
+					debugger;
+					$.ajax({
+						url: KBCONFIG.MKBURL + '/mkb/QATop',
+						data : {
+							apiKey : window.__yyuap_apiKey,
+							top:$('#num').val(),//没有top，后台默认取5
+						},
+						type:'post',
+						dataType:'json',
+						success:function(data){
+							alert("获取成功，返回数据:\n" + JSON.stringify(data));
+						},
+						error:function(data){
+							alert("获取失败，返回数据:\n" + JSON.stringify(data));
+						}
+
+					});
+				})
+			});
+		</script>
+	</head>
+	<body>
+		<div class="um-page" id="index">
+			<div class="um-header" >
+				<a href="../../index.html" class="um-back"> 返回</a>
+				<h3>TOP5</h3>
+				<a id="btnSave" href="#" class="um-header-right ">点击获取TOP5问题</a>
+			</div>
+			<div class="um-content p10">
+				<div class="um-content p10">
+				<ul class="um-list">
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									topN
+								</div>
+								<div class="um-list-item-right">
+									<input id="num" type="text" class="form-control" placeholder="请输入top的条数" data-bind="value:id1">
+								</div>
+							</div>
+						</div>
+					</li>
+					</ul>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../css/font-icons.css">	
+		<link rel="stylesheet" href="../../css/bootstrap.css">
+		<script src="../../js/public/summer.js" ></script>		
+		<script src="../../js/public/jquery.min.js" ></script>
+		<script src="../../js/public/bootstrap.js"></script>
+		<script src="../../js/public/vue.js" ></script>
+	</head>
+	<body>
+		<div   id="index">
+			  <table class="table table-bordered">
+				  		<caption class="h2 text-center">测试列表</caption>
+				  		<tr class="text-left" v-for="(item,index) in testList">
+				  			  <td><a :href="item.url">{{index+1}}.{{item.question}}</a></td>  
+				  			 
+				  		</tr>
+				  </table>
+		</div>
+		<script>
+			//解析url
+			function getParameter(param,query){
+				
+				var iLen = param.length;
+				var iStart = query.indexOf(param);
+				if (iStart == -1){return 0;}
+				iStart += iLen + 1;
+				var iEnd = query.indexOf("&", iStart);
+				if (iEnd == -1){
+				　return query.substring(iStart);
+				}else{
+				  return query.substring(iStart, iEnd);
+				}
+			  }
+			   var codeall=String(location.search);
+			    var __apiKey= getParameter("apiKey",codeall);
+			var testList=[
+				{
+					id:"1",
+					question:"新增QA数据服务",
+					url:"../../../mkb/html/crud/addQA.html?apiKey="+__apiKey+"",
+				},
+				{
+					id:"2",
+					question:"删除QA数据服务",
+					url:"../../../mkb/html/crud/delQA.html?apiKey="+__apiKey+"",
+				},
+				{
+					id:"3",
+					question:"批量删除服务",
+					url:"../../../mkb/html/crud/delQAbat.html?apiKey="+__apiKey+"",
+				},
+				{
+					id:"4",
+					question:"QA反馈请求服务",
+					url:"../../../mkb/test.html?apiKey="+__apiKey+"",
+				},
+				{
+					id:"5",
+					question:"更新QA服务",
+					url:"../../../mkb/html/crud/updateQAQS.html?apiKey="+__apiKey+"",
+				}
+				 
+			]
+			$(function(){
+				var vm=new Vue({
+					el:"#index",
+					data:{
+						 testList:testList
+					},
+				});
+			});
+		</script>
+	</body>
+</html>
