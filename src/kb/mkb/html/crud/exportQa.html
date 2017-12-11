@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../css/iuapmobile.um.css">
+		<link rel="stylesheet" href="../../css/font-icons.css">
+		<script src="../../js/public/jquery.min.js" ></script>
+		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
+		<script src="../../js/public/knockout.js" ></script>
+		<script type="text/javascript" src="../../js/public/kbconfig.js"></script>
+		<script>
+			var json;
+			var viewModel;
+			$(function() {
+				debugger
+				console.log(UM.MKBURL);
+				init();
+				$("#btnSave").on("click", function(){
+					debugger;
+					var kodata = viewModel(); 
+					kodata.qs = [kodata.q1, kodata.q2, kodata.q3];
+
+					$.ajaxSettings.traditional=true;
+					$.ajax({
+				        url:KBCONFIG.MKBURL + '/mkb/exportQA',
+			
+				        data: viewModel(),
+				        type:'post',
+				        dataType:'json',
+				        success:function(data){
+				            //alert("创建成功");//弹窗
+				            if(data.responseHeader.status == 0){
+				            	alert("导出成功");
+				            }else{
+				 				alert("导出失败");
+
+				 			}
+				 
+				        },
+				        error:function(data){
+				             alert(JSON.stringify(data));//弹窗
+				              //TODO ........
+				        }
+
+				    });
+				})
+			});
+			function init(){
+				//Knockout绑定
+				//debugger;
+
+				viewModel = ko.observable({
+					"apiKey" : "bc2b9ac6ea134eeb940bb1ec43ff3a5a"
+				
+				});
+				ko.applyBindings(viewModel);
+			}
+			
+		</script>
+	</head>
+	<body>
+		<div class="um-page" id="index">
+			<div class="um-header" >
+				<a href="../../index.html" class="um-back"> 返回</a>
+				<h3>导出QA及相似表</h3>
+				<a id="btnSave" href="#" class="um-header-right ti-save"></a>
+			</div>
+			<div class="um-content p10">
+				<ul class="um-list">
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									导出路径
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="默认C盘" readonly>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

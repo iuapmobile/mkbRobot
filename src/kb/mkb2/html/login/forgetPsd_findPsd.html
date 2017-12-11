@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>找回密码</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no, email=no" />
+		<link rel="stylesheet" href="../../css/common.css">
+		<style>
+			html {
+				background: #f4f4f4;
+			}
+			body {
+				font-size: 0.34rem;
+				color: #c0c0c0;
+				font-family: "微软雅黑";
+			}
+			section{
+			    background:#ffffff;
+			}
+			section form {
+				display: block;
+				padding-left: 0.3rem;
+			}
+			form input {
+				display: block;
+				width: 100%;
+				height: 0.9rem;
+				outline: none;
+			}
+			form input:nth-of-type(1) {
+				border-bottom: 1px solid #e4e4e4;
+			}
+			form input:nth-of-type(2) {
+			}
+			span.randomcode {
+				display: block;
+				width: 1.6rem;
+				height: 0.6rem;
+				background-color: #f4f4f4;
+				text-decoration: line-through;
+				color: #4873c0;
+				font-style: italic;
+				position: absolute;
+				top: 1.05rem;
+				right: 0.4rem;
+				text-align: center;
+				line-height: 0.6 rem;
+			}
+			.getUserId {
+				width: 100%;
+				height: 0.96rem;
+				line-height: 0.96rem;
+				text-align: center;
+				background-color: #1baede;
+				border: none;
+				color: #fff;
+				font-size: 0.32rem;
+				font-weight: 600;
+				position: absolute;
+				left: 0;
+				top: 2.8rem;
+			}
+		</style>
+		
+	</head>
+	<body>
+		<div id="wrap" class="um-win">
+			<div class="um-header" id="header">
+				<a class="um-back" onclick="summer.closeWin()"></a>
+				<h3>找回密码</h3>
+			</div>
+			<div id="main" class="um-content">
+				<section>
+					<form action="">
+						<input type="text" name="" id="show" placeholder="请输入要找回的手机号" />
+						<input type="text" name="" class="incode" placeholder="请输入右侧的字符" />
+						<span class="randomcode" onclick="createCode()"></span>
+
+					</form>
+					<a onclick="validatecode();" class="getUserId">下一步</a>
+				</section>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../js/public/summer.js"></script>
+	<script type="text/javascript" src="../../js/public/font.js"></script>
+	<script type="text/javascript" src="../../js/public/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="../../js/public/common.js"></script>
+	<script>
+		// JavaScript Document
+		//
+		var g_validate = {};
+		summerready = function() {
+		    var userPhone = summer.pageParam.param_userPhone;
+			// 携带的参数必须放在summerready 里面去执行
+			$("#show").val(userPhone);
+		}
+		
+		$(function(){
+			// 页面初始化生成随机码方法调用
+			createCode();
+		})
+		//校验码信息
+		
+		function createCode() {
+			g_validate.uuid = createUUID();
+			//$(".randomcode").html('<img id="imgObj" alt="" src="' + api_url + '/internal/createCode?uuid=' + validate.uuid + '">');
+            $(".randomcode").html('<img id="imgObj" alt="" src="'+api_url+'/internal/createCode?uuid='+g_validate.uuid+'">');
+		}
+
+		//校验随机码 下一步按钮事件处理
+		function validatecode() {
+			summer.showProgress({
+				title : '加载中...'
+			});
+			//判断是否输入内容
+			if (!$("#show").val() || !$(".incode").val()) {
+				summer.hideProgress();
+				jqAlert("请您填写信息");
+				return false;
+			}
+			//获取随机码
+			g_validate.verCode = ($(".incode").val()).toUpperCase();
+            ajaxRequest("internal/validateCode","post","application/x-www-form-urlencoded",g_validate,function(data){
+                if (data.statusCode == 200) {
+                    getUserInfo();
+                } else {
+                    summer.hideProgress();
+                    jqAlert("您输入的验证码有误");
+                    return false;
+                }
+            });
+		}
+        
+		//向后台提交数据
+		function getUserInfo() {
+            var param = {
+                "userCode" : $("#show").val()
+            };
+			//var userJson = {};
+			//userJson.userCode=$("#show").val();//登陆账号名
+            ajaxRequest("internal/getUserByCode","get","application/x-www-form-urlencoded",param,function(data){
+                summer.hideProgress();
+                if (data.statusCode == 200) {
+                    biduipassword(data.data);
+                } else {
+                    
+                    jqAlert("您输入的手机号或验证码有误");
+                }
+            });
+		}
+
+		// 跳转校对密码页面
+		function biduipassword(t) {
+			//localStorage.setItem("tempphone", t.userMobile);//forgetPsd_safeConfirm初始化时候使用
+			//localStorage.setItem("tempuserId", t.userId);//forgetPsd_safeConfirm初始化时候使用
+			var param = {
+				phone : t.userMobile,
+				userId : t.userId
+			}
+			summer.openWin({
+				id : "forgetPsd_safeConfirm",
+				url : "html/login/forgetPsd_safeConfirm.html",
+				pageParam : param
+			});
+		}
+	</script>
+</html>
+

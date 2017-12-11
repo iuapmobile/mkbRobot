@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="css/font-icons.css">
+		<link rel="stylesheet" href="css/iuapmobile.um.css">
+		<script src="js/public/jquery.js" ></script>
+		<script src="js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
+		<script type="text/javascript" src="js/public/kbconfig.js"></script>
+	</head>
+	<body>
+		<div id="win" class="um-win none" >
+			<div class="um-header" >
+				<a href="../../index.html" class="um-back"> 返回</a>
+				<h3>索引录入</h3>
+				<a id="btnSave" onclick="test()" href="#" class="um-header-right ti-save">点我测试</a>
+			</div>
+
+			<div id="content" class="um-content">
+				<ul class="um-list pl15 pr15">
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									apiKey
+								</div>
+								<div class="um-list-item-right">
+									<input id="apiKey" type="text" class="form-control" placeholder="租户地址"></input>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									后台服务地址
+								</div>
+								<div class="um-list-item-right">
+									<input id="url" type="text" class="form-control" placeholder="请输入后台服务地址"></input>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									参数1
+								</div>
+								<div class="um-list-item-right">
+									<input id="param1" type="text" class="form-control" placeholder="请输入后台服务地址"></input>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									参数2
+								</div>
+								<div class="um-list-item-right">
+									<input id="param12" type="text" class="form-control" placeholder="请输入后台服务地址"></input>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+
+			 
+		</div>
+		 
+		<script type="text/javascript" src="js/public/doT.min.js"></script>
+		<script>
+		var id____ = 1;
+
+			$(function(){
+				$("#apiKey").val("8002");
+				var url = KBCONFIG.MKBURL + '/mkb/QAFeedback';
+				$("#url").val(url);
+			});
+			function test(){
+				debugger;
+				var url = $("#url").val();
+				$.ajax({
+			        url:url,
+			        type:'post',
+			        dataType:'json',
+			        data:{
+			        	"apiKey" : $("#apiKey").val(),
+			        	id:id____++,
+			        	"score" : 1
+			        },
+			        success:function(data){
+			            alert("成功:\n"+JSON.stringify(data));
+			 
+			        },
+			        error:function(data){
+			        	alert("请求失败:\n"+JSON.stringify(data));
+			        }
+
+			    });
+			}
+
+		</script>
+	</body>
+</html>
