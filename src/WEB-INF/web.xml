@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5"
+         metadata-complete="true"
+>
+
+
+  <!-- Uncomment if you are trying to use a Resin version before 3.0.19.
+    Their XML implementation isn't entirely compatible with Xerces.
+    Below are the implementations to use with Sun's JVM.
+  <system-property javax.xml.xpath.XPathFactory=
+             "com.sun.org.apache.xpath.internal.jaxp.XPathFactoryImpl"/>
+  <system-property javax.xml.parsers.DocumentBuilderFactory=
+             "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl"/>
+  <system-property javax.xml.parsers.SAXParserFactory=
+             "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"/>
+   -->
+
+  <!-- People who want to hardcode their "Solr Home" directly into the
+       WAR File can set the JNDI property here...
+   -->
+  
+    <env-entry>
+       <env-entry-name>solr/home</env-entry-name>
+       <env-entry-value>/home/gct/kb_home</env-entry-value>
+       <env-entry-type>java.lang.String</env-entry-type>
+    </env-entry>
+   
+   
+  <!-- Any path (name) registered in solrconfig.xml will be sent to that filter -->
+  <filter>
+    <filter-name>SolrRequestFilter</filter-name>
+    <filter-class>org.apache.solr.servlet.SolrDispatchFilter</filter-class>
+    <!--
+    Exclude patterns is a list of directories that would be short circuited by the 
+    SolrDispatchFilter. It includes all Admin UI related static content.
+    NOTE: It is NOT a pattern but only matches the start of the HTTP ServletPath.
+    -->
+    <init-param>
+      <param-name>excludePatterns</param-name>
+      <param-value>/css/.+,/js/.+,/img/.+,/tpl/.+</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <!--
+      NOTE: When using multicore, /admin JSP URLs with a core specified
+      such as /solr/coreName/admin/stats.jsp get forwarded by a
+      RequestDispatcher to /solr/admin/stats.jsp with the specified core
+      put into request scope keyed as "org.apache.solr.SolrCore".
+
+      It is unnecessary, and potentially problematic, to have the SolrDispatchFilter
+      configured to also filter on forwards.  Do not configure
+      this dispatcher as <dispatcher>FORWARD</dispatcher>.
+    -->
+    <filter-name>SolrRequestFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <listener>
+    <listener-class>com.yyuap.mkb.listener.MeContextListener</listener-class>
+  </listener>
+
+
+  <filter>
+    <filter-name>AdminFilter</filter-name>
+    <filter-class>com.yyuap.mkb.filter.AdminFilter</filter-class>
+    <init-param>
+        <param-name>encoding</param-name>  
+            <param-value>utf-8</param-value>  
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>AdminFilter</filter-name>
+    <url-pattern>/admin.html</url-pattern>
+    <url-pattern>/index.html</url-pattern>
+  </filter-mapping>
+
+
+  <filter>
+    <filter-name>TenantFilter</filter-name>
+    <filter-class>com.yyuap.mkb.filter.TenantFilter</filter-class>
+    <init-param>
+        <param-name>encoding</param-name>  
+            <param-value>utf-8</param-value>  
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>TenantFilter</filter-name>
+    <url-pattern>/mkb</url-pattern>
+  </filter-mapping>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <servlet>
+    <servlet-name>gct_mkbquery</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.Query</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>gct_mkbquery</servlet-name>
+    <url-pattern>/mkb/s</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>gct_addDoc</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.AddDoc</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>gct_addDoc</servlet-name>
+    <url-pattern>/mkb/add</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>gct_delDoc</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.DelDoc</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>gct_delDoc</servlet-name>
+    <url-pattern>/mkb/del</url-pattern>
+  </servlet-mapping>
+
+
+  <servlet>
+    <servlet-name>importExcel2DB</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.ImportExcel2DB</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>importExcel2DB</servlet-name>
+    <url-pattern>/importExcel2DB</url-pattern>
+  </servlet-mapping>
+
+  <!-- <servlet>
+    <servlet-name>importExcel</servlet-name>
+    <servlet-class>com.yonyou.um.mkb.excel.importExcel</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>importExcel</servlet-name>
+    <url-pattern>/importExcel</url-pattern>
+  </servlet-mapping> -->
+
+
+  <servlet>
+    <servlet-name>indexFiles</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.IndexFiles</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>indexFiles</servlet-name>
+    <url-pattern>/indexFiles</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>importQA</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.ImportQA</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>importQA</servlet-name>
+    <url-pattern>/importQA</url-pattern>
+  </servlet-mapping>
+
+ <servlet>
+    <servlet-name>gct_addQA</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.AddQA</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>gct_addQA</servlet-name>
+    <url-pattern>/mkb/addQA</url-pattern>
+  </servlet-mapping>
+
+
+ <servlet>
+    <servlet-name>QueryAllQA</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.QueryAllQA</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QueryAllQA</servlet-name>
+    <url-pattern>/mkb/QueryAllQA</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_addStore</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.AddStore</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_addStore</servlet-name>
+    <url-pattern>/mkb/addStore</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_queryQaCollByUserid</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.QueryQaCollection</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_queryQaCollByUserid</servlet-name>
+    <url-pattern>/mkb/queryQaCollectionByUserid</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_delCollect</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.DelteCollect</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_delCollect</servlet-name>
+    <url-pattern>/mkb/delCollect</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>pengjf_exportQA</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.ExportQA</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_exportQA</servlet-name>
+    <url-pattern>/mkb/exportQA</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_login</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.login</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_login</servlet-name>
+    <url-pattern>/mkb/login</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_setistop</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.SetIsTop</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_setistop</servlet-name>
+    <url-pattern>/mkb/setIsTop</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_createTenant</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.CreateTenant</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_createTenant</servlet-name>
+    <url-pattern>/mkb/CreateTenant</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_queryTenant</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.QueryTenant</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_queryTenant</servlet-name>
+    <url-pattern>/mkb/QueryTenant</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_updateTenant</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.UpdateTenant</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_updateTenant</servlet-name>
+    <url-pattern>/mkb/UpdateTenant</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_delTenant</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.DelTenant</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_delTenant</servlet-name>
+    <url-pattern>/mkb/DelTenant</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_queryDataTj</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.QueryDataTj</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_queryDataTj</servlet-name>
+    <url-pattern>/mkb/QueryDataTj</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_queryBotServicesTj</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.QueryBotServicesTj</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_queryBotServicesTj</servlet-name>
+    <url-pattern>/mkb/QueryBotServicesTj</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_updateBotSetting</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.UpdateBotSetting</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_updateBotSetting</servlet-name>
+    <url-pattern>/mkb/UpdateBotSetting</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>pengjf_GetBotIsRecommended</servlet-name>
+    <servlet-class>com.yyuap.mkb.api.GetBotIsRecommended</servlet-class>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>pengjf_GetBotIsRecommended</servlet-name>
+    <url-pattern>/mkb/api/GetBotIsRecommended</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_SetBotIsRecommended</servlet-name>
+    <servlet-class>com.yyuap.mkb.api.SetBotIsRecommended
+</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_SetBotIsRecommended</servlet-name>
+    <url-pattern>/mkb/api/SetBotIsRecommended</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_AddKbInfo</servlet-name>
+    <servlet-class>com.yyuap.mkb.api.AddKbInfo</servlet-class>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>pengjf_AddKbInfo</servlet-name>
+    <url-pattern>/mkb/api/addKbInfo</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_updateKbInfo</servlet-name>
+    <servlet-class>com.yyuap.mkb.api.updateKbInfo
+</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_updateKbInfo</servlet-name>
+    <url-pattern>/mkb/api/updateKbInfo</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>pengjf_delKbInfo</servlet-name>
+    <servlet-class>com.yyuap.mkb.api.delKbInfo
+</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pengjf_delKbInfo</servlet-name>
+    <url-pattern>/mkb/api/delKbInfo</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>QueryAllKbInfo</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.QueryAllKbInfo</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QueryAllKbInfo</servlet-name>
+    <url-pattern>/mkb/QueryAllKbInfo</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>QueryTableFiled</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.QueryTableFiled</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QueryTableFiled</servlet-name>
+    <url-pattern>/mkb/queryTableFiled</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>SaveTableFiled</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.SaveTableFiled</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SaveTableFiled</servlet-name>
+    <url-pattern>/mkb/saveTableFiled</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>QueryDimensionTj</servlet-name>
+    <servlet-class>com.yyuap.mkb.api.QueryDimensionTj</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QueryDimensionTj</servlet-name>
+   <url-pattern>/mkb/api/queryDimensionTj</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>QueryQaTopTj</servlet-name>
+    <servlet-class>com.yyuap.mkb.api.QueryQaTopTj</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QueryQaTopTj</servlet-name>
+   <url-pattern>/mkb/api/queryQaTopTj</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>QueryDimensionData</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.QueryDimensionData</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QueryDimensionData</servlet-name>
+   <url-pattern>/mkb/queryDimensionData</url-pattern>
+  </servlet-mapping>
+
+
+  <servlet>
+    <servlet-name>QuerySimilarQById</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.QuerySimilarQById</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QuerySimilarQById</servlet-name>
+    <url-pattern>/mkb/QuerySimilarQById</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>QATop</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.QATop</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QATop</servlet-name>
+    <url-pattern>/mkb/QATop</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>QAFeedback</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.QAFeedback</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QAFeedback</servlet-name>
+    <url-pattern>/mkb/QAFeedback</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>DelQA</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.DelQA</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DelQA</servlet-name>
+    <url-pattern>/mkb/DelQA</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>DelQABat</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.DelQABat</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DelQABat</servlet-name>
+    <url-pattern>/mkb/DelQABat</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>UpdateQA</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.UpdateQA</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateQA</servlet-name>
+    <url-pattern>/mkb/UpdateQA</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>UpdateQAQS</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.UpdateQAQS</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateQAQS</servlet-name>
+    <url-pattern>/mkb/UpdateQAQS</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>QueryQACommand</servlet-name>
+    <servlet-class>com.yyuap.mkb.services.QueryQACommand</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QueryQACommand</servlet-name>
+    <url-pattern>/mkb/QueryQACommand</url-pattern>
+  </servlet-mapping>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <servlet>
+    <servlet-name>LoadAdminUI</servlet-name>
+    <servlet-class>org.apache.solr.servlet.LoadAdminUiServlet</servlet-class>
+  </servlet>
+  
+  <!-- Remove in Solr 5.0 -->
+  <!-- This sends SC_MOVED_PERMANENTLY (301) for resources that changed in 4.0 -->
+  <servlet>
+    <servlet-name>RedirectOldAdminUI</servlet-name>
+    <servlet-class>org.apache.solr.servlet.RedirectServlet</servlet-class>
+    <init-param>
+      <param-name>destination</param-name>
+      <param-value>${context}/#/</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>RedirectOldZookeeper</servlet-name>
+    <servlet-class>org.apache.solr.servlet.RedirectServlet</servlet-class>
+    <init-param>
+      <param-name>destination</param-name>
+      <param-value>${context}/admin/zookeeper</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>RedirectLogging</servlet-name>
+    <servlet-class>org.apache.solr.servlet.RedirectServlet</servlet-class>
+    <init-param>
+      <param-name>destination</param-name>
+      <param-value>${context}/#/~logging</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>SolrRestApi</servlet-name>
+    <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
+    <init-param>
+      <param-name>org.restlet.application</param-name>
+      <param-value>org.apache.solr.rest.SolrSchemaRestApi</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>RedirectOldAdminUI</servlet-name>
+    <url-pattern>/admin/</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RedirectOldAdminUI</servlet-name>
+    <url-pattern>/admin</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RedirectOldZookeeper</servlet-name>
+    <url-pattern>/zookeeper.jsp</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RedirectOldZookeeper</servlet-name>
+    <url-pattern>/zookeeper</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RedirectLogging</servlet-name>
+    <url-pattern>/logging</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>LoadAdminUI</servlet-name>
+    <url-pattern>/admin.html</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>LoadAdminUI</servlet-name>
+    <url-pattern>/index.html</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>SolrRestApi</servlet-name>
+    <url-pattern>/schema/*</url-pattern>
+  </servlet-mapping>
+  
+  <mime-mapping>
+    <extension>.xsl</extension>
+    <!-- per http://www.w3.org/TR/2006/PR-xslt20-20061121/ -->
+    <mime-type>application/xslt+xml</mime-type>
+  </mime-mapping>
+
+  <welcome-file-list>
+    <welcome-file>admin.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>

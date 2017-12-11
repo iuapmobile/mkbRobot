@@ -73,7 +73,7 @@
 				margin-top:100px;
 			}
 			.dataTotal{
-				width:1250px;
+				width:1450px;
 			}
 			.tabletitle{
 				border-top:1px solid #ddd;
@@ -85,10 +85,10 @@
 				width:100px;
 			}
 			.tabletitle span.question{
-				width:300px; 
+				width:200px; 
 			}
 			.tabletitle span.answer{
-				width:400px;
+				width:300px;
 			}
 			.tabletitle span.updateTime{
 				width:200px; 
@@ -111,11 +111,11 @@
 				text-align:center;
 			}
 			.tablecontent span.question{
-				width:300px;
+				width:200px;
 				 text-align:left;
 			}
 			.tablecontent span.answer{
-				width:400px;
+				width:300px;
 				 text-align:left;
 			}
 			.tablecontent span.updateTime{
@@ -149,7 +149,7 @@
 								    <button class="btn btn-info btn-search" @click="searchFilterData()" style="margin-left:10px">条件搜索</button>
 									 <button class="btn btn-info btn-search" style="margin-left:10px" @click="addNewContent()"  data-toggle="modal">新增问答</button>
 									 <button class="btn btn-info btn-search" style="margin-left:10px" @click="addNewDocument1()"  data-toggle="modal">新增文档</button>
-									  <button class="btn btn-info btn-search" style="margin-left:10px" @click="addNewOrder1()"  data-toggle="modal">新增命令</button>
+									  <button class="btn btn-info btn-search" style="margin-left:10px" @click="addNewOrder1()"  data-toggle="modal">新增唤醒命令</button>
 								</span>
 						</div>
 						<div style="position:absolute;right:10%;top:0px;backgroun-color:#5bc0de;top:25px">
@@ -172,7 +172,9 @@
 				  			<span class="text-center question">问题/文档名</span>
 				  			<span class="text-center answer">答案/文档描述</span>
 								<!--th class="text-center">文档地址</th-->
-				  			<span class="text-center updateTime">修改时间</span>
+				  			<span class="text-center updateTime" >修改时间</span>
+							<span class="text-center updateTime">{{this.columnDefine.extend0?this.columnDefine.extend0.field_desc:""}}</span>
+							<span class="text-center updateTime">{{this.columnDefine.extend1?this.columnDefine.extend1.field_desc:""}}</span>
 				  			<span class="text-center edit">操作</span>
 				  		</div>
 				  		<div class="tablecontent" v-for="(item,index) in myData"  >
@@ -183,6 +185,8 @@
 				  			<span class="answer" width="500" :title="item.answer">{{item.answer}}</span>
 								<!--td class="answer" width="200">{{item.url}}</td-->
 				  			<span class="updateTime" width="200">{{item.updateTime}}</span>
+							<span class="updateTime" width="200">{{item.extend0}}</span>
+							<span class="updateTime" width="200">{{item.extend1}}</span>
 				  			<span class="edit" width="200"><button class="btn btn-primary btn-sm" @click="editContent(item.id)"  data-toggle="modal"   >查看编辑</button><button style="margin-left:10px;" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#layer"  @click="nowIndex=index" >删除</button></span>
 				  		</div>
 				  		<!--<tr v-show="myData.length!=0">
@@ -385,27 +389,27 @@
 								 <div class="modal-body"  >
 									 <div id="questionList">
 										 <div class="questionList">
-											 <p>命令名</p>
-											 <input type="text" name="box"  class="form-control firstQuesionX"  placeholder="必填" v-model="addNewOrder.q"   />
+											 <p>命令唤醒说法:</p>
+											 <input type="text" name="box"  class="form-control firstQuesionX"  placeholder="这里定义你的唤醒说法（必填）" v-model="addNewOrder.q"   />
 											</div>
 											<div class="questionList">
 												<p>命令类型</p>
-												<input type="text" name="box"  class="form-control firstQuesionX"  placeholder="必填" v-model="addNewOrder.qtype" />
+												<input type="text" name="box"  class="form-control firstQuesionX"  placeholder="可自定义，由定义者解析（必填）" v-model="addNewOrder.qtype" />
 											 </div>
 											 <div v-for="(item,index) in addNewOrder.qs" class="newQuestionList"  v-show="addNewOrder.qs.length>0">
 												<span @click="removeOrder_addNew(index)"><img src="img/delete.png" width=15 alt="" /></span>
 												<div class="questionList">
-												<p>相似命令{{index+1}}:</p>
-												 <input type="text"  class="form-control firstQuesionX"  v-model="item.question" />
+												<p>相似说法:{{index+1}}:</p>
+												 <input type="text"  class="form-control firstQuesionX"  v-model="item.question" placeholder="这里定义你的常用的多种唤醒说法" />
 												</div>
 				  							</div>
 
 									 </div>
 
-									<p class="text-right addNewq" ><span @click="addNewOrder_newData">新增相似命令？</span></p>
+									<p class="text-right addNewq" ><span @click="addNewOrder_newData">增加相似说法？</span></p>
 									 <div>
-										 <p>执行命令结果</p>
-											 <textarea name="" id="" cols="30" rows="10" class="QfirstOne"  placeholder="执行命令结果（必填）" v-model="addNewOrder.a"></textarea>
+										 <p>命令参数数据:</p>
+											 <textarea name="" id="" cols="30" rows="10" class="QfirstOne"  placeholder="可以是任意数据，包括json对象，由定义者解析（必填）" v-model="addNewOrder.a"></textarea>
 									 </div>
 								 </div>
 								 <div class="modal-footer text-right">
@@ -427,18 +431,28 @@
 									<div class="modal-body"  >
 										<div id="questionList">
 											<div class="questionList">
-												<p>命令名:</p>
-												 <input type="text"  class="form-control firstQuesionX"  v-model="editInputOrder.question" />
-											 </div>                                                              
+												<p>命令唤醒说法:</p>
+												 <input type="text"  class="form-control firstQuesionX"  v-model="editInputOrder.question" placeholder="这里定义你的唤醒说法（必填）"/>
+											 </div>
+											<div v-for="(item,index) in editInputOrder.qs" class="newQuestionList" v-show="editInputOrder.qs.length>0">
+												<div v-show="item.status!='deleted'">
+													<span @click="removeEditOrder(index,item)"><img src="img/delete.png" width=15 alt="" /></span>
+													<div class="questionList" >
+													<p>相似说法:</p>
+													 <input type="text"  class="form-control firstQuesionX"  v-model="item.question" placeholder="这里定义你的常用的多种唤醒说法" />
+													</div>
+												</div>
+											</div>
+											<p class="text-right addNewq" ><span @click="addNewOrder_eidtData">增加相似说法？</span></p>													
 											 <div class="questionList">
  												<p>命令类型：</p>
- 												 <input type="text"  class="form-control firstQuesionX"  v-model="editInputOrder.qtype" />
+ 												 <input type="text"  class="form-control firstQuesionX"  v-model="editInputOrder.qtype" placeholder="可自定义，由定义者解析（必填）" />
  											 </div>
 
 										</div>
 										<div>
-											<p>执行命令结果:</p>
-												<textarea name="" id="" cols="30" rows="10" class="QfirstOne"  placeholder="文档描述" v-model="editInputOrder.answer"></textarea>
+											<p>命令参数数据:</p>
+												<textarea name="" id="" cols="30" rows="10" class="QfirstOne"  placeholder="可以是任意数据，包括json对象，由定义者解析（必填）" v-model="editInputOrder.answer"></textarea>
 										</div>
 									</div>
 									<div class="modal-footer text-right">
@@ -518,14 +532,16 @@
 				id:"",
 				questionList:[]
 			};
+		var columnDefine={};
 		var _startPage=0;
 		var _pageSizeRows=10;
 		var _startPageMulu=0;
 		var _toatlPate;
 
 
-		//新增的数据
+		//新增的QA数据
 	   var  addNewData={
+				"ktype":"qa",//可以默认不指定ktype，默认值为qa
 				"q":"",
 				"a":"",
 				"qs":[],
@@ -533,6 +549,7 @@
 			};
 			//新增的文档
 		   var  addNewDocument={
+					"ktype":"doc",//文档类型
 					"q":"",
 					"a":"",
 					"url":"",
@@ -540,6 +557,7 @@
 				};
 			//新增的命令
 		   var  addNewOrder={
+					"ktype":"command",//指令类型
 					"q":"",
 					"a":"",
 					"qs":[],
@@ -589,7 +607,8 @@
 										searchValue:"",
 										seachFilterData:seachFilterData,
 										selectedData:"all",
-										 message: '页面加载于 ' + new Date()
+										 message: '页面加载于 ' + new Date(),
+										 columnDefine:''
 									},
 									methods:{
 										init:function(){
@@ -614,6 +633,7 @@
 														dept:deptFinanlInit,
 													},
 													success : function(data) {
+														columnDefine=data.response.extend;
 														_toatlPate=data.response.numFound;
 													  _self.myData=data.response.docs;
 													   initPage();
@@ -827,6 +847,14 @@
 											}
 											this.addNewOrder.apiKey=__apiKey;
 											var inputNewData=JSON.parse(JSON.stringify(this.addNewOrder));
+											
+											var strArray = [];
+											for(var i=0,len=inputNewData.qs.length;i<len;i++){
+												if(inputNewData.qs[i].question){
+													strArray.push(inputNewData.qs[i].question);
+												}
+											}
+											inputNewData.qs = strArray;
 											$.ajaxSettings.traditional=true;
 											console.log(inputNewData);
 												$.ajax({
@@ -836,14 +864,14 @@
 															type:'post',
 															dataType:'json',
 															success:function(data){
-																  alert("新增成功");//弹窗
+																  alert("新增命令成功");//弹窗
 														 a.init();
 
 
 
 															},
 															error:function(data){
-																	 alert(JSON.stringify(data));//弹窗
+																	 alert("发生异常："+ JSON.stringify(data));//弹窗
 
 															}
 
@@ -855,6 +883,10 @@
 										 saveEditNewOrder:function(){
 											 this.editInputOrder.apiKey=__apiKey;
 											 var finanalEditOrder=JSON.parse(JSON.stringify(this.editInputOrder));
+											 if(finanalEditOrder.qs && Object.prototype.toString.call(finanalEditOrder.qs) === '[object Array]'){
+												finanalEditOrder.qs = JSON.stringify(finanalEditOrder.qs);
+											 }
+											 
 											 $.ajaxSettings.traditional=true;
 
 											 $.ajax({
@@ -996,10 +1028,28 @@
 												question:""
 											});
 										},
+										addNewOrder_eidtData:function(){
+											this.editInputOrder.qs.push({
+												question:"",
+												status:'added'
+											});
+										},
 										addNewOrder_newData:function(){
 											this.addNewOrder.qs.push({
 												question:""
 											});
+										},
+										removeEditOrder:function(index,item){
+											if(!item.status){
+												this.editInputOrder.qs[index].status="deleted";
+
+												//this.editInputData.qs[index].question="";
+											}else{
+											alert(123)
+												this.editInputOrder.qs.splice(index,1);
+											}
+											a.init();
+											console.log(this.editInputOrder);
 										},
 										removeQuestion:function(index,item){
 											if(!item.status){
@@ -1012,6 +1062,7 @@
 											a.init();
 											console.log(this.editInputData);
 										},
+										
 										removeQuestion_addNew:function(index){
 											this.addNewData.qs.splice(index,1);
 										},
