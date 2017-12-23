@@ -1,0 +1,13 @@
+1、我的审批、我的申请：app_approve
+2、通讯录：app_contacts
+3、常见问答：app_faq
+4、hr指南：app_hrguide
+5、hr日历：app_hrkalendar
+6、请假：app_leave
+7、个人信息：app_personalinfo
+8、开证明：app_prove
+9、离职：app_resig
+10、智慧hr：app_robot
+11、搜索：app_search
+12、考勤：app_sign
+13、我的团队：app_team

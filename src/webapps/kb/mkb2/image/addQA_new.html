@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../css/font-icons.css">
+		<link rel="stylesheet" href="../../css/bootstrap.css">
+		<link rel="stylesheet" href="../../css/bootstrap-pagination.min.css">
+		<style>
+
+			/*table.table{
+
+				 table-layout:fixed;
+			}
+			td{
+				 overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+			}
+			table tr>td.first{
+				width:100px;
+			}
+			table tr>td.question{
+				width:200px;
+			}
+			table tr>td.answer{
+				width:400px;
+			}
+			table tr>td.updateTime{
+				width:150px;
+			}
+			table tr>td.edit{
+				width:150px;
+			}*/
+			 table.table > tbody > tr > th {
+				 vertical-align:middle;
+				 text-align:center;
+			}
+			 table.table > tbody > tr > td {
+				 vertical-align:middle;
+				 text-align:center;
+			}
+			table.table > tbody > tr > td.answer{
+				text-align:left;
+				text-indent:2rem;
+			}
+			table.table > tbody > tr > td.first{
+				text-align:left;
+
+			}
+			.QfirstOne{
+				color:#343434;
+				border:1px solid #e4e4e4;
+				border-radius:3px;
+				text-indent:2em;
+				padding:10px;
+				width:100%;
+				line-height:1.5;
+			}
+			.addNewq span{
+				color:#31b0d5;
+				cursor:pointer;
+			}
+			.newQuestionList{
+				position: relative;
+				margin-top:5px;
+			}
+			.newQuestionList>span{
+				position:absolute;
+				top:25px;
+				right:0px;
+				cursor:pointer;
+			}
+			 .newQuestionList div>span{
+				position:absolute;
+				bottom:17px;
+				right:0px;
+				z-index:99;
+				font-size:16px;
+				color:red;
+				cursor:pointer;
+				/*width:12px;
+				height:12px;
+				display:inline-block;
+				border:1px solid red;
+				border-radius:50%;*/
+			}
+			body{
+				position:absolute;
+				top:0;
+				right:0;
+				left:0;
+				bottom:0;
+			}
+			.headerTop{
+				position:fixed;
+				top:0px;
+				padding-top:50px;
+				padding-bottom:20px;
+				width:100%;
+				background:#fff;
+				box-shadow: 0 0px 5px #888;
+				padding-left:50px;
+
+			}
+
+			#box{
+
+				margin-top:100px;
+			}
+
+		</style>
+	</head>
+	<body>
+
+		<div class="um-win" id="index">
+
+
+			<div class=" " id="box">
+
+				 <div class="headerTop">
+						<div class="input-group col-md-6  "  >
+								   <input type="text" class="form-control"placeholder="搜索问题或者答案" v-model="searchValue"/ >
+										<span class="input-group-btn">
+										   <button class="btn btn-info btn-search" @click="searchData(searchValue)">搜索</button>
+											 <button class="btn btn-info btn-search" style="margin-left:10px" @click="addNewContent()"  data-toggle="modal">新增问答</button>
+											 <button class="btn btn-info btn-search" style="margin-left:10px" @click="addNewDocument1()"  data-toggle="modal">新增文档</button>
+											<!-- <button class="btn btn-info btn-search" style="margin-left:10px" onclick="inputNewD()">批量导入</button-->
+										</span>
+						</div>
+				</div>
+				<div class="" style="padding-left:50px;padding-right:50px;">
+
+					 <table class="table table-bordered">
+				  		<caption class="h2 text-left"><button id="obtain" class="btn btn-primary">批量删除</button></caption>
+				  		<tr>
+							<th class="text-center">
+						<input type="checkbox" class="xcheckgroup1  allselect" id="checkAll" /><label for="checkAll">全选</label>
+							</th>
+				  			<th class="text-center">问题/文档名</th>
+				  			<th class="text-center">答案/文档描述</th>
+								<th class="text-center">文档地址</th>
+				  			<th class="text-center">修改时间</th>
+				  			<th class="text-center">操作</th>
+				  		</tr>
+				  		<tr class="" v-for="(item,index) in myData" style="text-indent:2rem;">
+								<td class="first" width="80">
+									<input type="checkbox" class="xcheckgroup1 checkItem uniqueInput" :data-id="item.id" :value="item.id"   />
+								</td>
+				  			  <td class="question" width="200">{{item.question}}</td>
+				  			<td class="answer" width="700">{{item.answer}}</td>
+								<td class="answer" width="700">{{item.url}}</td>
+				  			<td class="updateTime" width="180">{{item.updateTime}}</td>
+				  			<td class="edit" width="180"><button class="btn btn-primary btn-sm" @click="editContent(item.id)"  data-toggle="modal"   >编辑</button><button style="margin-left:10px;" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#layer"  @click="nowIndex=index" >删除</button></td>
+				  		</tr>
+				  		<!--<tr v-show="myData.length!=0">
+				  			<td colspan="4" class="text-right">
+				  				<button class="btn btn-danger btn-sm"  data-toggle="modal" data-target="#layer" @click="nowIndex=-2">全部删除</button>
+				  			</td>
+				  		</tr>-->
+				  		<tr v-show="myData.length==0">
+				  			<td colspan="4" class="text-center text-muted">
+				  				 <p>暂无数据</p>
+				  			</td>
+				  		</tr>
+				  </table>
+				</div>
+
+				  <!-- 删除模态框     弹出框-->
+				  <div role="dialog" class="modal fade bs-example-modal-sm" id="layer" v-bind:data-tar="nowIndex" >
+				  	<div class="modal-dialog">
+				  		<div class="modal-content">
+				  			<div class="modal-header">
+				  				<button type="button" class="close" data-dismiss="modal">
+				  					<span>&times;</span>
+				  				</button>
+
+				  				<h4 class="modal-title" v-show="nowIndex==-2">确认删除全部吗？</h4>
+				  				<h4 class="modal-title" v-show="nowIndex!=-2">确认删除吗？</h4>
+
+				  			</div>
+				  			<div class="modal-body text-right">
+				  				<button data-dismiss="modal" class="btn btn-primary btn-sm">取消</button>
+				  				<button data-dismiss="modal" class="btn btn-danger btn-sm" @click="deleteMsg(nowIndex)">确定</button>
+				  			</div>
+				  		</div>
+				  	</div>
+				  </div>
+				<!--   编辑模态框 -->
+				 <div role="dialog" class="modal fade bs-example-modal-sm" id="layer2"   >
+				  	<div class="modal-dialog">
+				  		<div class="modal-content">
+				  			<div class="modal-header">
+				  				<button type="button" class="close" data-dismiss="modal">
+				  					<span>&times;</span>
+				  				</button>
+				  			</div>
+				  			<div class="modal-body"  >
+				  				<div id="questionList">
+				  					<div class="questionList">
+					  					<p>问题:</p>
+					  					 <input type="text"  class="form-control firstQuesionX"  v-model="editInputData.question" />
+				  				   </div>
+				  		 		  <div v-for="(item,index) in editInputData.qs" class="newQuestionList" v-show="editInputData.qs.length>0">
+				  		 		  			<div v-show="item.status!='deleted'">
+				  		 		  				<span @click="removeQuestion(index,item)"><img src="img/delete.png" width=15 alt="" /></span>
+						  				   		<div class="questionList" >
+		   					  					<p>相似问法:</p>
+		   					  					 <input type="text"  class="form-control firstQuesionX"  v-model="item.question" />
+		   				  				  		</div>
+				  		 		  			</div>
+				  				   </div>
+				  				</div>
+
+				  				<p class="text-right addNewq" ><span @click="addNewQuestion">新增相似问法？</span></p>
+				  				<div>
+				  					<p>答案:</p>
+				  					  <textarea name="" id="" cols="30" rows="10" class="QfirstOne"  placeholder="答案" v-model="editInputData.answer"></textarea>
+				  				</div>
+				  			</div>
+				  			<div class="modal-footer text-right">
+				  				<button data-dismiss="modal" class="btn btn-primary btn-sm">取消</button>
+				  				<button data-dismiss="modal" class="btn btn-danger btn-sm" @click="saveQuestionList">保存</button>
+				  			</div>
+				  		</div>
+				  	</div>
+				  </div>
+					<!--   编辑文档modal -->
+					 <div role="dialog" class="modal fade bs-example-modal-sm" id="layer5"   >
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">
+											<span>&times;</span>
+										</button>
+									</div>
+									<div class="modal-body"  >
+										<div id="questionList">
+											<div class="questionList">
+												<p>文档名:</p>
+												 <input type="text"  class="form-control firstQuesionX"  v-model="editInputDocument.question" />
+											 </div>
+											 <div class="questionList">
+ 												<p>文档地址:</p>
+ 												 <input type="text"  class="form-control firstQuesionX"  v-model="editInputDocument.url" />
+ 											 </div>
+
+										</div>
+										<div>
+											<p>文档描述:</p>
+												<textarea name="" id="" cols="30" rows="10" class="QfirstOne"  placeholder="文档描述" v-model="editInputDocument.answer"></textarea>
+										</div>
+									</div>
+									<div class="modal-footer text-right">
+										<button data-dismiss="modal" class="btn btn-primary btn-sm">取消</button>
+										<button data-dismiss="modal" class="btn btn-danger btn-sm" @click="saveQuestionDocument">保存</button>
+									</div>
+								</div>
+							</div>
+						</div>
+				 <!--  新增模态框 -->
+				 <div role="dialog" class="modal fade bs-example-modal-sm" id="layer3"   >
+				  	<div class="modal-dialog">
+				  		<div class="modal-content">
+				  			<div class="modal-header">
+				  				<button type="button" class="close" data-dismiss="modal">
+				  					<span>&times;</span>
+				  				</button>
+				  			</div>
+				  			<div class="modal-body"  >
+				  				<div id="questionList">
+				  					<div class="questionList">
+					  					<p>问题:</p>
+					  					<input type="text" name="box"  class="form-control firstQuesionX"  v-model="addNewData.q" />
+				  				   </div>
+				  		 		  <div v-for="(item,index) in addNewData.qs" class="newQuestionList"  v-show="addNewData.qs.length>0">
+				  		 		  		<span @click="removeQuestion_addNew(index)"><img src="img/delete.png" width=15 alt="" /></span>
+				  				   		<div class="questionList">
+   					  					<p>相似问法{{index+1}}:</p>
+   					  					 <input type="text"  class="form-control firstQuesionX"  v-model="item.question" />
+   				  				  		</div>
+				  				   </div>
+				  				</div>
+
+				  				<p class="text-right addNewq" ><span @click="addNewQuestion_newData">新增相似问法？</span></p>
+				  				<div>
+				  					<p>答案:</p>
+				  					  <textarea name="" id="" cols="30" rows="10" class="QfirstOne"  placeholder="答案" v-model="addNewData.a"></textarea>
+				  				</div>
+				  			</div>
+				  			<div class="modal-footer text-right">
+				  				<button data-dismiss="modal" class="btn btn-primary btn-sm">取消</button>
+				  				<button data-dismiss="modal" class="btn btn-danger btn-sm" @click="saveAddNewList">保存</button>
+				  			</div>
+				  		</div>
+				  	</div>
+				  </div>
+					<!-- 新增文档 -->
+					<div role="dialog" class="modal fade bs-example-modal-sm" id="layer4"   >
+						 <div class="modal-dialog">
+							 <div class="modal-content">
+								 <div class="modal-header">
+									 <button type="button" class="close" data-dismiss="modal">
+										 <span>&times;</span>
+									 </button>
+								 </div>
+								 <div class="modal-body"  >
+									 <div id="questionList">
+										 <div class="questionList">
+											 <p>文档名:</p>
+											 <input type="text" name="box"  class="form-control firstQuesionX"  placeholder="必填" v-model="addNewDocument.q"   />
+											</div>
+											<div class="questionList">
+												<p>文档地址:</p>
+												<input type="text" name="box"  class="form-control firstQuesionX"  placeholder="必填" v-model="addNewDocument.url" />
+											 </div>
+
+									 </div>
+
+
+									 <div>
+										 <p>文档描述:</p>
+											 <textarea name="" id="" cols="30" rows="10" class="QfirstOne"  placeholder="文档描述（非必填）" v-model="addNewDocument.a"></textarea>
+									 </div>
+								 </div>
+								 <div class="modal-footer text-right">
+									 <button data-dismiss="modal" class="btn btn-primary btn-sm">取消</button>
+									 <button data-dismiss="modal" class="btn btn-danger btn-sm" @click="saveAddNewDocument">保存</button>
+								 </div>
+							 </div>
+						 </div>
+					 </div>
+
+			</div>
+			<div class="text-center">
+				<ul id="demo2" class="pagination">
+				</ul>
+			</div>
+
+		</div>
+		<script src="../../js/public/jquery.min.js" ></script>
+		<script src="../../js/public/bootstrap.js" ></script>
+		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
+		<script src="../../js/public/vue.js" ></script>
+		<script src="../../js/public/bootstrap-pagination.js" ></script>
+		<script src="../../js/public/kbconfig.js" ></script>
+		<script src="./data.js" ></script>
+		<script>
+
+
+	    //从后端获取数据
+		//var __myData=[];
+		//编辑完成以后向后端提交的数据
+		//编辑数据有四种状态
+		var _searchData;
+		var __apiKey;//唯一身份id
+		//status:modified,delete,add
+		var editInputData={
+				question:"",
+				answer:"",
+				id:"",
+				questionList:[]
+			};
+		var _startPage=0;
+		var _pageSizeRows=10;
+		var _startPageMulu=0;
+		var _toatlPate;
+
+
+		//新增的数据
+	   var  addNewData={
+				"q":"",
+				"a":"",
+				"qs":[],
+				"apiKey" : __apiKey
+			};
+			//新增的文档
+		   var  addNewDocument={
+					"q":"",
+					"a":"",
+					"url":"",
+					"apiKey" : __apiKey
+				};
+			//解析url
+			function getParameter(param,query){
+
+				var iLen = param.length;
+				var iStart = query.indexOf(param);
+				if (iStart == -1){return 0;}
+				iStart += iLen + 1;
+				var iEnd = query.indexOf("&", iStart);
+				if (iEnd == -1){
+				　return query.substring(iStart);
+				}else{
+				  return query.substring(iStart, iEnd);
+				}
+			  }
+			  var a;
+			$(function(){
+				 var codeall=String(location.search);
+			     __apiKey= getParameter("apiKey",codeall);
+				//__apiKey="85de79b9f7e34c37a99accaddb256990"
+
+						   a=new Vue({
+									el:"#box",
+									data:{
+										myData:"",//后台请求列表数据
+										editInputData:"",//编辑后提交数据
+										editInputDocument:"",//编辑后提交数据
+										addNewData:addNewData,//新增
+										addNewDocument:addNewDocument,
+										nowIndex:-100,
+										searchValue:"",
+										 message: '页面加载于 ' + new Date()
+									},
+									methods:{
+										init:function(){
+											var _self=this;
+											 $.ajax({
+													type : "get",
+													dataType : "json",
+													url :KBCONFIG.MKBURL +"/mkb/QueryAllQA?",
+													data : {
+														apiKey:__apiKey,
+														start:_startPage,//第几页，初始0
+														rows: _pageSizeRows, //一页显示多少条
+														q:_searchData
+													},
+													success : function(data) {
+														_toatlPate=data.response.numFound;
+													  _self.myData=data.response.docs;
+													   initPage();
+
+
+													},
+													error : function(res) {
+														 _self.myData=responseData.docs;
+														 alert(JSON.stringify(res));
+													}
+												});
+										},
+										deleteMsg:function(n){
+											if(n==-2){
+												//调取删除全部的接口
+												this.myData=[];
+											}else{
+											 //   console.log(n);
+											 //改行的id，通过ajax请求提交给后端,将id传给后台
+											 var __self=this;
+											 $.ajax({
+											        url:KBCONFIG.MKBURL + '/mkb/DelQA',
+											        data: {id:__self.myData[n].id,apiKey:__apiKey,},
+											        type:'post',
+											        dataType:'json',
+											        success:function(data){
+														 a.init();
+
+
+											        },
+											        error:function(data){
+
+											             alert(JSON.stringify(data));//弹窗
+											        }
+
+											    });
+
+												//console.log();
+												 //增强更好的体验
+												//this.myData.splice(n,1);
+											}
+
+										},
+										savaModified:function(){
+										  var qsNewDataId=this.editInputData.id;
+										  var qsNewData=this.editInputData;
+										  var __self=this;
+										  var qsOldData;
+										  $.ajax({
+											        url:KBCONFIG.MKBURL + '/mkb/QuerySimilarQById',
+											        data: {id:qsNewDataId,apiKey:__apiKey,},
+											        type:'get',
+											        dataType:'json',
+											        success:function(data){
+														qsOldData=data;
+											 			 for(var i=0;i<qsNewData.qs.length;i++){
+															if(qsNewData.qs[i].id){
+																if(qsNewData.qs[i].question!=qsOldData.qs[i].question){
+																	__self.editInputData.qs[i].status="modified"
+																}
+															}
+														 };
+														for(var i = 0;i<__self.editInputData.qs.length;i++){
+																if(__self.editInputData.qs[i].question==''||__self.editInputData.qs[i].question==null){
+																	__self.editInputData.qs.splice(i,1);
+																	i=i-1;
+																}
+														}
+														__self.editInputData.qs=JSON.stringify(__self.editInputData.qs);
+														__self.editInputData.apiKey=__apiKey;
+
+														var finanalEditData=JSON.parse(JSON.stringify(__self.editInputData));
+														console.log(finanalEditData);
+
+														$.ajaxSettings.traditional=true;
+
+														$.ajax({
+																url:KBCONFIG.MKBURL + '/mkb/UpdateQAQS',
+																contentType:"application/x-www-form-urlencoded",
+																//contentType:"application/json",
+																data:finanalEditData,
+																type:'post',
+																dataType:'json',
+																success:function(data){
+																	//alert("创建成功");//弹窗
+																	if(data.responseHeader.status == 0){
+																		alert("添加成功");
+																		a.init();
+																	}else{
+																		alert(data.response.reason);
+																		if(data.responseHeader.status == 1062){
+																			alert("重复数据的id为" + data.response.id);
+																		}
+
+																	}
+
+																},
+																error:function(data){
+																	 alert(JSON.stringify(data));//弹窗
+																	  //TODO ........
+																}
+
+															});
+
+
+
+											        },
+											        error:function(data){
+
+											             alert(JSON.stringify(data));//弹窗
+											        }
+
+											    });
+
+
+										 },
+										 saveAddNewDocument:function(){
+											 var finanalEditDocument=JSON.parse(JSON.stringify(this.editInputDocument));
+											 $.ajaxSettings.traditional=true;
+
+											 $.ajax({
+													 url:KBCONFIG.MKBURL + '/mkb/UpdateQAQS',
+													 contentType:"application/x-www-form-urlencoded",
+													 //contentType:"application/json",
+													 data:finanalEditDocument,
+													 type:'post',
+													 dataType:'json',
+													 success:function(data){
+														 //alert("创建成功");//弹窗
+														 if(data.responseHeader.status == 0){
+															 alert("添加成功");
+															 a.init();
+														 }else{
+															 alert(data.response.reason);
+															 if(data.responseHeader.status == 1062){
+																 alert("重复数据的id为" + data.response.id);
+															 }
+
+														 }
+
+													 },
+													 error:function(data){
+															alert(JSON.stringify(data));//弹窗
+															 //TODO ........
+													 }
+
+												 });
+										 },
+										editContent:function(id){
+											var _self=this;
+											var initEditData;
+											$.ajax({
+											        url:KBCONFIG.MKBURL + '/mkb/QuerySimilarQById',
+											        data: {id:id,apiKey:__apiKey,},
+											        type:'get',
+											        dataType:'json',
+											        success:function(data){
+
+
+																if(data.url){
+																	 _self.editInputData=data;
+																	$("#layer2").modal();
+																}else{
+																		 _self.editInputDocument=data;
+																	$("#layer5").modal();
+																}
+
+											        },
+											        error:function(data){
+											        	_self.editInputData=_editInputData
+											             alert(JSON.stringify(data));//弹窗
+											        }
+
+											    });
+											/* for(var i=0;i<__myData.length;i++){
+												if(__myData[i].id==id){
+													 this.myOtherDdata.question=__myData[i].question;
+													 this.myOtherDdata.answer=__myData[i].answer;
+													 this.myOtherDdata.id=id;
+												}
+											} */
+
+										},
+										addNewContent:function(){
+											$("#layer3").modal();
+										},
+										addNewDocument1:function(){
+											$("#layer4").modal();
+										},
+										addNewQuestion:function(){
+											this.editInputData.qs.push({
+												question:"",
+												status:'added'
+											});
+										},
+										addNewQuestion_newData:function(){
+											this.addNewData.qs.push({
+												question:""
+											});
+										},
+										removeQuestion:function(index,item){
+											if(!item.status){
+												this.editInputData.qs[index].status="deleted";
+
+												//this.editInputData.qs[index].question="";
+											}else{
+												this.editInputData.qs.splice(index,1);
+											}
+											a.init();
+											console.log(this.editInputData);
+										},
+										removeQuestion_addNew:function(index){
+											this.addNewData.qs.splice(index,1);
+										},
+										saveQuestionList:function(){
+											a.savaModified();
+
+										/*	 this.$watch('editInputData',function(newValue,oldValue){
+											console.log(newValue);
+											console.log(oldValue);
+							                alert('发生变化了');
+							            },{deep:true})
+											console.log(JSON.stringify(this.myOtherDdata));*/
+										},
+
+										saveAddNewList:function(){
+											//将新增数据提交后端
+											if(this.addNewData.q==""){
+												alert("问题不能为空");
+												return;
+											}
+											if(this.addNewData.a==""){
+												alert("答案不能为空");
+												return;
+											}
+											var qs=[];
+											for(var i=0;i<this.addNewData.qs.length;i++){
+												qs.push(this.addNewData.qs[i].question);
+											}
+											this.addNewData.qs=qs;
+											this.addNewData.apiKey=__apiKey;
+											var inputNewData=JSON.parse(JSON.stringify(this.addNewData));
+											$.ajaxSettings.traditional=true;
+											console.log(inputNewData);
+												$.ajax({
+											        url:KBCONFIG.MKBURL + '/mkb/addQA',
+
+											        data: inputNewData,
+											        type:'post',
+											        dataType:'json',
+											        success:function(data){
+											           // alert("创建成功");//弹窗
+													   a.init();
+
+
+
+											        },
+											        error:function(data){
+											             alert(JSON.stringify(data));//弹窗
+
+											        }
+
+											    });
+
+
+
+										},
+										saveAddNewDocument:function(){
+											//将新增文档提交后端
+											if(this.addNewDocument.q==""){
+												alert("文档名不能为空");
+												return;
+											}
+											if(this.addNewDocument.url==""){
+												alert("文档地址不能为空");
+												return;
+											}
+											this.addNewDocument.apiKey=__apiKey;
+											var inputNewData=JSON.parse(JSON.stringify(this.addNewDocument));
+											$.ajaxSettings.traditional=true;
+											console.log(addNewDocument);
+												$.ajax({
+															url:KBCONFIG.MKBURL + '/mkb/addQA',
+
+															data: addNewDocument,
+															type:'post',
+															dataType:'json',
+															success:function(data){
+																  alert("新增成功");//弹窗
+														 a.init();
+
+
+
+															},
+															error:function(data){
+																	 alert(JSON.stringify(data));//弹窗
+
+															}
+
+													});
+
+
+
+										},
+										searchData:function(args){
+											//根据搜索的内容进行后端ajax请求
+											var _self=this;
+											 _startPage=0;
+											 _pageSizeRows=10;
+											 _searchData=args;
+											 $.ajax({
+													type : "get",
+													dataType : "json",
+													url :KBCONFIG.MKBURL +"/mkb/QueryAllQA?",
+													data : {
+														apiKey:__apiKey,
+														q:args,
+														start:_startPage,
+														rows:_pageSizeRows
+													},
+													success : function(data) {
+
+													   _toatlPate=data.response.numFound;
+													  _self.myData=data.response.docs;
+													   initPage();
+
+
+													},
+													error : function(res) {
+														 _self.myData=responseData.docs;
+														 alert(JSON.stringify(res));
+													}
+												});
+										}
+
+									}
+
+								});
+					a.init();
+					$('#layer2').on('hidden.bs.modal', function () {
+				  		editInputData.qs=[];
+
+					})
+					$('#layer3').on('hidden.bs.modal', function () {
+				  		addNewData.qs=[];
+				  		addNewData.q="";
+				  		addNewData.a="";
+					})
+					$('#layer4').on('hidden.bs.modal', function () {
+				  		addNewDocument.url="";
+				  		addNewData.q="";
+				  		addNewData.a="";
+					})
+
+			//购物车全选
+			$('.allselect').click(function(){
+				$(".uniqueInput").prop("checked",$(this).prop("checked"));
+				//同步所有的全选按钮
+				$('.allselect').prop("checked",$(this).prop("checked"));
+
+			});
+
+			//若在全选状态下，单个商品取消选中状态，则恢复全选按钮未选中状态
+			$('.uniqueInput').click(function(){
+				if(!$(this).prop('checked')){
+					$('.allselect').prop("checked",$(this).prop("checked"));
+				}
+				//若在非全选状态下，单个商品依次选中要更新全选按钮状态
+				if($('.uniqueInput').length == $('input.uniqueInput:checked').length){
+					$('.allselect').prop("checked",true);
+				}
+			});
+
+
+			//获取选中的checkbox的id
+			$('#obtain').click(function(){
+				//记录选中的id
+				var getArray = [];
+
+				$('.uniqueInput').each(function(){
+					if($(this).prop('checked')){
+						getArray.push($(this).attr('data-id'));
+					}
+				});
+				if(getArray.length>0){
+					$.ajaxSettings.traditional=true;
+					 $.ajax({
+							url:KBCONFIG.MKBURL + '/mkb/DelQABat',
+							data: {ids:getArray,apiKey:__apiKey,},
+							type:'post',
+							dataType:'json',
+							success:function(data){
+								 a.init();
+
+
+							},
+							error:function(data){
+
+								 alert(JSON.stringify(data));//弹窗
+							}
+
+						});
+				}else{
+					alert("请选择删除项");
+				}
+				console.log(getArray);
+			});
+
+
+
+
+
+			});
+			function initPage(){
+				 var demo2 = BootstrapPagination($("#demo2"), {
+                layoutScheme: "lefttext,pagesizelist,firstpage,prevgrouppage,prevpage,pagenumber,nextpage,nextgrouppage,lastpage,pageinput,righttext",
+                //记录总数。
+                total: _toatlPate,
+                //分页尺寸。指示每页最多显示的记录数量。
+                pageSize: _pageSizeRows,
+                //当前页索引编号。从其开始（从0开始）的整数。
+                pageIndex: _startPageMulu,
+                //指示分页导航栏中最多显示的页索引数量。
+                pageGroupSize: 10,
+                //位于导航条左侧的输出信息格式化字符串
+                leftFormateString: "本页{count}条/共{total}条",
+                //位于导航条右侧的输出信息格式化字符串
+                rightFormateString: "第{pageNumber}页/共{totalPages}页",
+                //页码文本格式化字符串。
+                pageNumberFormateString: "{pageNumber}",
+                //分页尺寸输出格式化字符串
+                pageSizeListFormateString: "每页显示{pageSize}条",
+                //上一页导航按钮文本。
+                prevPageText: "上一页",
+                //下一页导航按钮文本。
+                nextPageText: "下一页",
+                //上一组分页导航按钮文本。
+               // prevGroupPageText: "上一组",
+                //下一组分页导航按钮文本。
+               // nextGroupPageText: "下一组",
+                //首页导航按钮文本。
+                firstPageText: "首页",
+                //尾页导航按钮文本。
+                lastPageText: "尾页",
+                //设置页码输入框中显示的提示文本。
+                pageInputPlaceholder: "GO",
+                //接受用户输入内容的延迟时间。单位：毫秒
+                pageInputTimeout: 800,
+                //分页尺寸列表。
+                pageSizeList: [5, 10, 20, 50, 100, 200],
+                //当分页更改后引发此事件。
+                pageChanged: function (pageIndex, pageSize) {
+					 _startPage=pageIndex*pageSize;
+					 _startPageMulu=pageIndex;
+					 _pageSizeRows=pageSize;
+					 a.init();
+                    //alert("page changed. pageIndex:" + pageIndex + ",pageSize:" + pageSize)
+                },
+            });
+			}
+
+
+
+		</script>
+	</body>
+</html>

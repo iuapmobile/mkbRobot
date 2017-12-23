@@ -1,0 +1,8 @@
+#复制 solr core 原路径
+sourceCorePath=/home/gct/kb_home/default_core_tpl
+#solr 的solrhome路径
+solrhomePath=/home/gct/kb_home/
+#solr 通过http创建的路径
+solrPath=https://aiserver.yonyoucloud.com/kb/admin/cores
+# 搜索备选答案数
+search_num=3

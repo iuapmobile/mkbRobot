@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../css/iuapmobile.um.css">
+		<link rel="stylesheet" href="../../css/font-icons.css">
+		<script src="../../js/public/jquery.min.js" ></script>
+		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
+		<script src="../../js/public/knockout.js" ></script>
+		<script type="text/javascript" src="../../js/public/kbconfig.js"></script>
+		<script>
+			var json;
+			var viewModel;
+			$(function() {
+				debugger
+				console.log(UM.MKBURL);
+				init();
+				$("#btnSave").on("click", function(){
+					debugger;
+					var kodata = viewModel(); 
+					//kodata.qs = [kodata.q1, kodata.q2, kodata.q3];
+
+					kodata.qs[0].q = kodata.q1;
+					kodata.qs[1].q = kodata.q2;
+					//kodata.qs[2].q = kodata.q3;
+					//kodata.qs[3].q = kodata.q4;
+
+
+					kodata.qs = JSON.stringify(kodata.qs);
+
+					$.ajaxSettings.traditional=true;
+					$.ajax({
+				        url:KBCONFIG.MKBURL + '/mkb/UpdateQAQS',
+				        contentType:"application/x-www-form-urlencoded", 
+						//contentType:"application/json",
+				        data: kodata,
+				        type:'post',
+				        dataType:'json',
+				        success:function(data){
+				            //alert("创建成功");//弹窗
+				            if(data.responseHeader.status == 0){
+				            	alert("添加成功，数据id为" + data.response.id);
+				            }else{
+				 				alert(data.response.reason);
+				 				if(data.responseHeader.status == 1062){
+				 					alert("重复数据的id为" + data.response.id);
+				 				}
+
+				 			}
+				 
+				        },
+				        error:function(data){
+				             alert(JSON.stringify(data));//弹窗
+				              //TODO ........
+				        }
+
+				    });
+				})
+			});
+			function init(){
+				//Knockout绑定
+				//debugger;
+
+				viewModel = ko.observable({
+					"id" : "2f3fa896-7bae-41ee-8110-56202a80cdf1",
+					"q" : "移动开发",
+					"a" : "iuapmobile是一款优秀的移动开发平台",
+					"q1": "new add 1111111",
+					"q2": "new add 222222",
+					"q3": "uuu",
+					"q4": "kkk",
+					//"qs": ["iuapmobile","iuap mobile","用友移动开发平台","用友移动应用开发平台"],
+					"qs" :[{						
+						q:"new111111",
+						status:"added"
+					},{						
+						q:"new222222",
+						status:"added"
+					},{
+						id:'8808c47f-0ba5-4651-b4b1-312075be3fb7',
+						q:"a",
+						status:"deleted"
+
+					},{
+						id:'cd5056a1-35fc-4b54-874d-876d6c48aea8',
+						q:"ccccccccc",
+						status:"modified"
+					},{
+						id:'8d81f2d4-bafb-4681-8b0d-2ba0d9c03f5',
+						q:"bb"
+					}],
+					"apiKey" : "bc2b9ac6ea134eeb940bb1ec43ff3a5a"
+				
+				});
+				ko.applyBindings(viewModel);
+			}
+			
+		</script>
+	</head>
+	<body>
+		<div class="um-page" id="index">
+			<div class="um-header" >
+				<a href="../../index.html" class="um-back"> 返回</a>
+				<h3>索引录入</h3>
+				<a id="btnSave" href="#" class="um-header-right ti-save"></a>
+			</div>
+			<div class="um-content p10">
+				<ul class="um-list">
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									id
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入问题" data-bind="value:id">
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									问题
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入问题" data-bind="value:q">
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									答案
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入答案" data-bind="value:a">
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									相似问法1
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入相似问法" data-bind="value:q1">
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									相似问法2
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入相似问法" data-bind="value:q2">
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									相似问法3
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入相似问法" data-bind="value:q3">
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									相似问法4
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入相似问法" data-bind="value:q4">
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

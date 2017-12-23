@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../css/font-icons.css">	
+		<link rel="stylesheet" href="../../css/bootstrap.css">
+		<style>
+			#index{
+				padding:40px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="um-win" id="index">
+			<h2 class="text-center">机器人服务次数统计</h2>
+			<p>按天统计</p>
+		 	 <div id='myChart' style="height:500px;"></div>
+		 	 <p>按小时统计</p>
+		 	  <div id='myChart2' style="height:500px;"></div>
+		</div>
+		<script src="../../js/public/jquery.min.js" ></script>
+		<script src="../../js/public/bootstrap.js" ></script>
+		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
+		<script src="../../js/public/echarts.min.js" ></script>
+		<script src="../../js/public/vue.js" ></script>
+		<script>
+			 $(function () {		
+                // 基于准备好的dom，初始化echarts实例
+        		var myChart=echarts.init(document.getElementById("myChart"));
+        		// 指定图表的配置项和数据
+        		 option = {
+				    title: {
+				        text: '上周API调用统计变化',
+				        subtext: '模拟数据'
+				    },
+				    tooltip: {
+				        trigger: 'axis'
+				    },
+				    toolbox: {
+				        show: true,
+				        feature: {
+				            dataZoom: {
+				                yAxisIndex: 'none'
+				            },
+				            dataView: {readOnly: false},
+				            magicType: {type: ['line', 'bar']},
+				            restore: {},
+				            saveAsImage: {}
+				        }
+				    },
+				    xAxis:  {
+				        type: 'category',
+				        boundaryGap: false,
+				        data: ['周一','周二','周三','周四','周五','周六','周日']
+				    },
+				    yAxis: {
+				        type: 'value',
+				        axisLabel: {
+				            formatter: '{value} 次'
+				        }
+				    },
+				    series: [
+				        {
+				            name:'调用次数',
+				            type:'line',
+				            data:[100, 52, 15,68, 364, 215, 524],
+				            markPoint: {
+				                data: [
+				                    {type: 'max', name: '最大值'},
+				                    {type: 'min', name: '最小值'}
+				                ]
+				            },
+				            markLine: {
+				                data: [
+				                    {type: 'average', name: '平均值'}
+				                ]
+				            }
+				        }
+				       
+				    ]
+				};
+
+
+		        // 为echarts对象加载数据 
+		        myChart.setOption(option); 
+        		// 点击事件操作
+        		 myChart.on('click', function (param) {
+        			alert(JSON.stringify(param.value));
+        		});	
+        		
+        		//按小时统计结果
+        		 // 基于准备好的dom，初始化echarts实例
+        		var myChart=echarts.init(document.getElementById("myChart2"));
+        		// 指定图表的配置项和数据
+        		 option2 = {
+				    title: {
+				        text: '昨天API调用统计变化',
+				        subtext: '模拟数据'
+				    },
+				    tooltip: {
+				        trigger: 'axis'
+				    },
+				    toolbox: {
+				        show: true,
+				        feature: {
+				            dataZoom: {
+				                yAxisIndex: 'none'
+				            },
+				            dataView: {readOnly: false},
+				            magicType: {type: ['line', 'bar']},
+				            restore: {},
+				            saveAsImage: {}
+				        }
+				    },
+				    xAxis:  {
+				        type: 'category',
+				        boundaryGap: false,
+				        data: ['0点','1点','2点','3点','4点','5点','6点','7点','8点','9点','10点','11点','12点','13点','14点','15点','16点','17点','18点','19点','20点','21点','22点','23点']
+				    },
+				    yAxis: {
+				        type: 'value',
+				        axisLabel: {
+				            formatter: '{value} 次'
+				        }
+				    },
+				    series: [
+				        {
+				            name:'调用次数',
+				            type:'line',
+				            data:[10, 5, 15,2, 8, 18, 1,10, 5, 15,2, 8, 15, 1,10, 5, 15,2, 8, 15, 1,10, 5, 15],
+				            markPoint: {
+				                data: [
+				                    {type: 'max', name: '最大值'},
+				                    {type: 'min', name: '最小值'}
+				                ]
+				            },
+				            markLine: {
+				                data: [
+				                    {type: 'average', name: '平均值'}
+				                ]
+				            }
+				        }
+				       
+				    ]
+				};
+
+
+		        // 为echarts对象加载数据 
+		        myChart.setOption(option2); 
+        		// 点击事件操作
+        		 myChart.on('click', function (param) {
+        			alert(JSON.stringify(param.value));
+        		});	
+        			 
+            });
+		</script>
+	</body>
+</html>

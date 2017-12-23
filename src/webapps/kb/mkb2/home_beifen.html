@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="./css/bootstrap.css">
+		<link rel="stylesheet" href="./css/font-icons.css">	
+		<style>
+			html{
+				font-family:PingFangSC-Semibold;
+			}
+			#index{
+				padding:40px;
+			}
+			.robotTitle{
+				color:#4A4A4A;
+				font-size:32px;
+				padding-bottom:30px;
+			}
+			.robotModal{
+				width:250px;
+				height:238px;
+				background:#FB6B50;
+				border-radius:5px;
+				text-align:center;
+				color:white;
+				margin:0 auto;
+				display:table;
+				float:left;
+				margin-right:50px;
+				margin-bottom:50px;
+			}
+			.robotCell{
+				display:table-cell;
+				vertical-align:middle;
+			}
+			.robotCell .title{
+				margin-bottom:30px;
+			}
+			.btn-group .btn{
+				background:white;
+				color:#333;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="" id="index">
+		 	<p class="robotTitle">机器人列表</p>
+		 	<div style="overflow:hidden;" id="robotModal" v-for="(item,index) in robotList">
+		 		<div class="robotModal">
+		 			<div class="robotCell">
+		 				<p class=""><img :src="item.src" width=50 alt="" /></p>
+		 			    <p class="title">{{item.title}}</p>
+		 			  	<div class="btn-group">  
+						  <button class="btn" ><a :href="item.url1">测试demo</a></button>  
+						  <button class="btn"><a :href="item.url2">知识库列表</a></button>  
+						</div>  
+		 			</div>
+		 		</div>
+		 	</div>
+		</div>
+		<script src="./js/public/summer.js" ></script>		
+		<script src="./js/public/jquery.min.js" ></script>
+		<script src="./js/public/bootstrap.js"></script>
+		<script src="./js/public/vue.js" ></script>
+		<script>
+			//解析url
+			function getParameter(param,query){
+				
+				var iLen = param.length;
+				var iStart = query.indexOf(param);
+				if (iStart == -1){return 0;}
+				iStart += iLen + 1;
+				var iEnd = query.indexOf("&", iStart);
+				if (iEnd == -1){
+				　return query.substring(iStart);
+				}else{
+				  return query.substring(iStart, iEnd);
+				}
+			  }
+			var robotList=[
+				{
+					id:"1",
+					title:"云小智机器人",
+					src:"img/common-robot.png",
+					url1:"html/crud/testExampleList.html",
+					url2:"html/crud/addQA.html"
+				}
+			];
+			 var codeall=String(location.search);
+			 var apiKey= getParameter("apiKey",codeall);
+			 var tname=decodeURI(getParameter("tname",codeall));
+			 
+			$(function(){
+				robotList[0].title=tname;
+				robotList[0].url1="html/crud/testExampleList.html?apiKey="+apiKey+"";
+				robotList[0].url2="html/crud/addQA.html?apiKey="+apiKey+"";
+				var vm=new Vue({
+					el:"#index",
+					data:{
+						 robotList:robotList
+					},
+				});
+			});
+		</script>
+	</body>
+</html>

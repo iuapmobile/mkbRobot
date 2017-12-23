@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../css/iuapmobile.um.css">
+		<link rel="stylesheet" href="../../css/font-icons.css">
+		<script src="../../js/public/jquery.min.js" ></script>
+		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
+		<script src="../../js/public/knockout.js" ></script>
+		<script type="text/javascript" src="../../js/public/kbconfig.js"></script>
+		<script>
+			var json;
+			var viewModel;
+			$(function() {
+				console.log(UM.MKBURL);
+				init();
+				$("#btnDel").on("click", function(){
+					debugger;
+					//alert(123);
+					if(!confirm("真的要删除吗？")){
+						return;
+					}
+
+					var data = viewModel();
+					data.ids = [data.id1, data.id2, data.id3];
+
+					$.ajaxSettings.traditional=true;
+					$.ajax({
+				       	url:KBCONFIG.MKBURL + '/mkb/DelQABat',
+				        data: viewModel(),
+				        type:'post',
+				        dataType:'json',
+				        success:function(data){
+				        	if(data.responseHeader.status == 0){
+				            	alert("删除成功");//弹窗
+				        	}else{
+				        		alert("删除失败")
+				        	}
+				 			alert(JSON.stringify(data));//弹窗
+				            //TODO ........
+				 
+				        },
+				        error:function(data){
+				             alert(JSON.stringify(data));//弹窗
+				              //TODO ........
+				        }
+
+				    });
+				})
+			});
+			function init(){
+				//Knockout绑定
+				//debugger;
+
+				viewModel = ko.observable({
+					"id1":"",
+					"id2":"",
+					"id3":"",
+					"ids" : ["01b8f6a7-8fcb-4afb-a09c-0d7d0aa5feab","2f3fa896-7bae-41ee-8110-56202a80cdf1","32662265-aa64-403e-8495-526272bde4db"],
+					"apiKey" : "bc2b9ac6ea134eeb940bb1ec43ff3a5a"
+				});
+				ko.applyBindings(viewModel);
+			}
+			
+		</script>
+	</head>
+	<body>
+		<div class="um-page" id="index">
+			<div class="um-header" >
+				<a href="../../index.html" class="um-back"> 返回</a>
+				<h3>索引录入</h3>
+				<a id="btnDel" href="#" class="um-header-right ti-delete">删除</a>
+			</div>
+			<div class="um-content p10">
+				<ul class="um-list">
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									id1
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入id" data-bind="value:id1">
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									id2
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入id" data-bind="value:id2">
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									id3
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入id" data-bind="value:id3">
+								</div>
+							</div>
+						</div>
+					</li>
+					
+					
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

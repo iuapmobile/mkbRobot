@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>智能问答</title>
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no, email=no"/>
+		<link rel="stylesheet" href="../../css/iuapmobile.um.css">
+		<link rel="stylesheet" href="../../css/common.css"/>
+		<link rel="stylesheet" href="./robot.css"/>
+	</head>
+	<body>
+		<!--列表类型-->
+		<script id="multiSelectTmpl" type="text/x-dot-template">
+			<div class="chat-item-text ">
+				{{if(it.botResponse != null){}}
+					<div class="multiSelect-header">{{= it.botResponse.text }}</div>
+				
+					{{if(it.botResponse.code == 200000){}}
+						<div class="multiSelect-content-box"><a href="{{= it.botResponse.url}}">点击这儿打开查看:)</a></div>
+					{{}}}
+				{{}}}
+				{{if(it.numFound > 0){}}
+					<div class="multiSelect-header" style="padding-top:10px">我猜您关心的问题是以下几个:</div>
+					<div class="multiSelect-content-box">
+					{{~it.docs :value:index}}
+						<div class="multiSelect-content-item um-text-overflow"
+						onclick="clickResponseUrl('{{= value.url}}', '{{= value.id}}')">
+						{{=index+1}}.{{=value.title}}
+						</div>
+					{{~}}
+					</div>
+				{{}}}
+			</div>
+		</script>
+		<div>
+			<div class="robotPhoto">
+				<img src="../../image/common/robotl.png"  width=40 height=45 alt="" />
+			</div>
+			<div class="robotContent" style="display:">
+				<div class="um-win" id="main">
+					<div class="um-header" style="display:none">
+						<h3 class="headSpan"></h3>
+						<a id="btnBack" href="#" class="um-back" style="display:none" onclick="closeW()"></a>
+					</div>
+					<div class="um-content p5" id="content">
+						<div id="convo">
+							<ul class="chat-thread" id="chat-thread">
+
+							</ul>
+							<div class="chat-tips-box">
+								<span class="chat-tips">没有想要的，<span class="search-for-hr" onclick="goFeedback()">请点击我</span></span>
+							</div>
+						</div>
+
+					</div>
+					<div class="um-footer">
+						<div class="chat-input-box">
+							<img src="../../image/robot/speech.png" alt="" class="change-input-type" data-flag='speech'/>
+
+							<div class="show-input">
+								<input type="text" class="form-control chat-input" placeholder="亲,有什么想要问我的吗?"/>
+								<button class="btn chat-send">
+									发送
+								</button>
+							</div>
+							<div class="show-speech none" onclick="speechToString()">
+								点击 说话
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="Hcontent um-win" style="display:none">
+			<div class="searchContent p10 um-header">
+				<div class="um-box">
+					<div class=""  >
+						<img src="../../image/robot/iuap_logo.png" height=40 class="fl" alt="" />
+					</div>
+					<div class="um-bf1">
+						<input type="text" class="fl form-control" id="searchbox" style="position: relative; padding:5px;" value="移动开发平台中的列表如何开发">
+					</div>
+					<button class="um-btn btn-inline" id="searchButton">智能搜索</button>
+					<label class="um-switch1" style="display:none">
+						<input id="sa" type="checkbox" value="off" onchange="alert(this.checked?'开启':'关闭')">
+						<div class="um-track">
+							<div class="um-handle"></div>
+						</div> 
+					</label>
+				</div>
+			</div>
+
+			<div class="searchArticle um-content">
+				<div class="searchResult pl10 pr10">
+
+				</div>
+			</div>
+		</div>
+		<script id="list1" type="text/x-dot-template">
+			<ul class="">
+			{{ for (var i=0;i<it.length;i++ ){ }}
+			<li class="pt20 clearfix" >
+			<a href="{{=it[i].url}}" class="title mb10" target="view_window">
+			{{=it[i].title}}
+			</a>
+			{{if(it[i].descriptImg){}}
+			<div class="IC um-box">
+			{{}else{}}
+			<div class="um-box">
+			{{}}}
+			<a class="descImg">
+			<img src="{{=it[i].descriptImg}}" alt="" />
+			</a>
+			<div class="descCon um-bf1">
+			<p class="f12 d-des">{{=it[i].descript}}</p>
+			<p class="f13 pt5 clearfix">
+			<a class="d-url fl"  href="{{=it[i].url}}">{{=it[i].url}}</a>
+			<span class="tr fr">{{=it[i].updateTime}}</span>
+			</p>
+			</div>
+			</div>
+			</li>
+			{{ } }}
+			</ul>
+		</script>
+		<script type="text/javascript" src="../../js/public/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/public/summer.js"></script>
+		<script type="text/javascript" src="../../js/public/doT.min.js"></script>
+		<script type="text/javascript" src="../../js/public/layer_mobile/layer.js"></script>
+		<script type="text/javascript" src="./robot.js"></script>
+		<script type="text/javascript" src="data.js"></script>
+		<script type="text/javascript" src="../../js/public/kbconfig.js"></script>
+		<script>
+			$('.robotPhoto').on('click', function(e) {
+				//$("#main").removeClass('none');
+				$(".robotContent").slideToggle();
+				//$(e.currentTarget).next().toggleClass('active').slideToggle();
+
+				$("#btnBack").show();
+
+			});
+			function closeW(){
+				$(".robotContent").slideToggle();
+			}
+			$(function() {
+				console.log($summer.os);
+				var dmobile = navigator.userAgent.match(/AppleWebKit.*Mobile.*/);
+				
+				/*
+				if(!!dmobile){
+					$(".robotContent").hide();
+				}else{
+					//$(".robotContent")[0].attr("display","none");	
+					$(".robotContent").hide();
+				}
+				*/
+				$("#searchButton").on("click", function() {
+					var content = $('#searchbox').val();
+					var sa = $('#sa').get(0).checked;
+					console.log(content?content:"*:*");
+					$.ajax({
+						type : "get",
+						dataType : "json",
+						//url2 : "http://172.27.35.3:8080/solr/mycore1/select",
+						//url3 : "http://127.0.0.1:8080/solr/mycore1/select",
+						url : KBCONFIG.MKBURL + "/mkb/s",
+						data : {
+							indent : "on",
+							q : content?content:"*:*",
+							wt : "json",
+							sa : sa,
+							apiKey : "8001",
+							deviceType: "pc"
+						},
+						success : function(data) {
+							//alert(1);
+							//console.log(JSON.stringify(data));
+							console.log("success");
+							console.log(JSON.stringify(data));
+							var arrText1 = doT.template($("#list1").text());
+							$(".searchResult").html(arrText1(data.response.docs));
+
+						},
+						error : function(res) {
+							console.log("error");
+							var data = data_demo;
+							var arrText1 = doT.template($("#list1").text());
+							$(".searchResult").html(arrText1(data.response.docs));
+						}
+					});
+
+				});
+				$("#searchButton1").on("click", function() {
+					var arrText1 = doT.template($("#list1").text());
+					$(".searchResult").html(arrText1(data.response.docs));
+
+				});
+			});
+			window.__yyuap_apiKey = "8001";
+		</script>
+	</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../../css/iuapmobile.um.css">
+		<link rel="stylesheet" href="../../css/font-icons.css">
+		<script src="../../js/public/jquery.min.js" ></script>
+		<script src="../../js/Frameworks/iuapmobile.frameworks.ui.js" ></script>
+		<script src="../../js/public/knockout.js" ></script>
+		<script type="text/javascript" src="../../js/public/kbconfig.js"></script>
+		<script>
+			var json;
+			var viewModel;
+			$(function() {
+				console.log(UM.MKBURL);
+				init();
+				$("#btnDel").on("click", function(){
+					debugger;
+					//alert(123);
+					if(!confirm("真的要删除吗？")){
+						return;
+					}
+					$.ajax({
+				       	url:KBCONFIG.MKBURL + '/mkb/DelQA',
+				        data: viewModel(),
+				        type:'post',
+				        dataType:'json',
+				        success:function(data){
+				            alert("删除成功");//弹窗
+				 			 alert(JSON.stringify(data));//弹窗
+				            //TODO ........
+				 
+				        },
+				        error:function(data){
+				             alert(JSON.stringify(data));//弹窗
+				              //TODO ........
+				        }
+
+				    });
+				})
+			});
+			function init(){
+				//Knockout绑定
+				//debugger;
+
+				viewModel = ko.observable({
+					"id" : "01b8f6a7-8fcb-4afb-a09c-0d7d0aa5feab",					
+					"apiKey" : "bc2b9ac6ea134eeb940bb1ec43ff3a5a"
+				});
+				ko.applyBindings(viewModel);
+			}
+			
+		</script>
+	</head>
+	<body>
+		<div class="um-page" id="index">
+			<div class="um-header" >
+				<a href="../../index.html" class="um-back"> 返回</a>
+				<h3>status为0表示删除成功</h3>
+				<a id="btnDel" href="#" class="um-header-right ti-delete">删除</a>
+			</div>
+			<div class="um-content p10">
+				<ul class="um-list">
+					<li>
+						<div class="um-list-item">
+							<div class="um-list-item-inner">
+								<div class="um-list-item-left">
+									要删除的问题的id
+								</div>
+								<div class="um-list-item-right">
+									<input type="text" class="form-control" placeholder="请输入id" data-bind="value:id">
+								</div>
+							</div>
+						</div>
+					</li>
+					
+					
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>
