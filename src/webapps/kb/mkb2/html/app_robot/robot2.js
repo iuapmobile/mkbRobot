@@ -103,30 +103,52 @@ function getRobotResponse(text,visibleRange,descriptId) {
     	 	}
     	 }
     }
+	var reqData = {
+		//indent : "on",
+		q : !text ? "*:*" : text,
+		//wt : "json",
+		//deviceType: "mobile",
+		//bot: "true",
+		apiKey:__robotApiKey,
+		isObserver: false,
+		tag:__visibleRange,
+		//dailog:__dailog,
+		dailogid:__dailogid,
+		//tenantid:"um8002",
+		buserid: __buserid
+	};
 	$.ajaxSettings.traditional=true;
     $.ajax({
 		type : "post",
 		dataType : "json",
 		url : KBCONFIG.MKBURL + "/mkb/s",
-		data : {
-			indent : "on",
-			q : !text ? "*:*" : text,
-			wt : "json",
-            deviceType: "mobile",
-            bot: "true",
-            apiKey:__robotApiKey,
-			tag:__visibleRange,
-			dailog:__dailog,
-			dailogid:__dailogid,
-			tenantid:"um8002",
-            buserid: __buserid
-		},
+		data : reqData,
 		success : function(data) {
 		  //获取用户类型
 		  __userType="customer";
+		  
+		  if(data.response.botResponse.ktype=="scene"){
+			  var scene = data.response.botResponse.scene;
+			  if(scene.status=="2"){
+				  if(scene.scene == "8c3f8e60846f40c98a1fd96369093e8c"){
+					  //找人
+					  data.response.botResponse.text = "已经帮您找到<" + scene.data.name + ">这个人。";
+				  }else if(scene.scene == "c4f9a37a2d4e4f25808c879d47d6aa87"){
+					  //找服务
+					  data.response.botResponse.text = "已经帮您找到<" + scene.data.name + ">这个服务。";
+				  }else if(scene.scene == "0ced0a05389e4049b9b440609595d423"){
+					  //打电话
+					  data.response.botResponse.text = "正在给<" + scene.data.name + ">打电话。";
+				  }else{
+					  
+				  }
+			  }
+		  }
+		  
+		  
 		  //把数据存到一个数组里面
-			 __publicData=__publicData.concat(data.response.docs) ;
-			 __dailog=data.response.botResponse.dailog;
+			__publicData=__publicData.concat(data.response.docs) ;
+			__dailog=data.response.botResponse.dailog;
 			__dailogid = data.response.botResponse.dailogid;
 			commonRenderRobot(data, $("#multiSelectTmpl"), $li,text);
 

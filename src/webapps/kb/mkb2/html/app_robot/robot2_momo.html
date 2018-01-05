@@ -136,7 +136,27 @@
 		</script>
 		<script>
 			//不同机器人配置项
-			var __robotPhotoUrl="../../img/robot1.png",__robotHelloText="您好，我是沫沫，有什么可以帮到您？",__robotApiKey="85de79b9f7e34c37a99accaddb256990";
+			//debugger;
+			
+			var __robotPhotoUrl="../../img/robot1.png",__robotHelloText="您好，我是小友，有什么可以帮到您？",__robotApiKey="85de79b9f7e34c37a99accaddb256990";
+			
+			var href = location.href;
+			var strKVs = href.split("?")[1];
+			if(strKVs){
+				var items = strKVs.split("&");
+				if(items){
+					for(var i=0,len=items.length;i<len;i++){
+						var listKV = items[i].split("=");
+						var left = listKV[0];
+						var right = listKV[1];
+						if(left == "apiKey"){
+							__robotApiKey = right;
+							break;
+						}
+					}
+				}
+			}
+			
 		</script>
 		<script type="text/javascript" src="../../js/public/jquery.min.js"></script>
 		<script type="text/javascript" src=" ../../js/public/summer.js"></script>

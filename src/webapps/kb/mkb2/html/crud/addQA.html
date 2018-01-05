@@ -173,8 +173,8 @@
 				  			<span class="text-center answer">答案/文档描述</span>
 								<!--th class="text-center">文档地址</th-->
 				  			<span class="text-center updateTime" >修改时间</span>
-							<span class="text-center updateTime">{{this.columnDefine.extend0?this.columnDefine.extend0.field_desc:""}}</span>
-							<span class="text-center updateTime">{{this.columnDefine.extend1?this.columnDefine.extend1.field_desc:""}}</span>
+							<span class="text-center updateTime" v-bind:style="{width: listSettings.extend0Width}">{{this.columnDefine.extend0?this.columnDefine.extend0.field_desc:""}}</span>
+							<span class="text-center updateTime" v-bind:style="{width: listSettings.extend1Width}">{{this.columnDefine.extend1?this.columnDefine.extend1.field_desc:""}}</span>
 				  			<span class="text-center edit">操作</span>
 				  		</div>
 				  		<div class="tablecontent" v-for="(item,index) in myData"  >
@@ -185,8 +185,8 @@
 				  			<span class="answer" width="500" :title="item.answer">{{item.answer}}</span>
 								<!--td class="answer" width="200">{{item.url}}</td-->
 				  			<span class="updateTime" width="200">{{item.updateTime}}</span>
-							<span class="updateTime" width="200">{{item.extend0}}</span>
-							<span class="updateTime" width="200">{{item.extend1}}</span>
+							<span class="updateTime" v-bind:style="{width: listSettings.extend0Width}">{{item.extend0}}</span>
+							<span class="updateTime" v-bind:style="{width: listSettings.extend1Width}">{{item.extend1}}</span>
 				  			<span class="edit" width="200"><button class="btn btn-primary btn-sm" @click="editContent(item.id)"  data-toggle="modal"   >查看编辑</button><button style="margin-left:10px;" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#layer"  @click="nowIndex=index" >删除</button></span>
 				  		</div>
 				  		<!--<tr v-show="myData.length!=0">
@@ -388,11 +388,14 @@
 								 </div>
 								 <div class="modal-body"  >
 									 <div id="questionList">
-											<div class="questionList">
+										 <div class="questionList">
 											 <p>命令唤醒说法:</p>
 											 <input type="text" name="box"  class="form-control firstQuesionX"  placeholder="这里定义你的唤醒说法（必填）" v-model="addNewOrder.q"   />
 											</div>
-											
+											<div class="questionList">
+												<p>命令类型</p>
+												<input type="text" name="box"  class="form-control firstQuesionX"  placeholder="可自定义，由定义者解析（必填）" v-model="addNewOrder.qtype" />
+											 </div>
 											 <div v-for="(item,index) in addNewOrder.qs" class="newQuestionList"  v-show="addNewOrder.qs.length>0">
 												<span @click="removeOrder_addNew(index)"><img src="img/delete.png" width=15 alt="" /></span>
 												<div class="questionList">
@@ -400,10 +403,6 @@
 												 <input type="text"  class="form-control firstQuesionX"  v-model="item.question" placeholder="这里定义你的常用的多种唤醒说法" />
 												</div>
 				  							</div>
-											<div class="questionList">
-												<p>命令类型</p>
-												<input type="text" name="box"  class="form-control firstQuesionX"  placeholder="可自定义，由定义者解析（必填）" v-model="addNewOrder.qtype" />
-											 </div>
 
 									 </div>
 
@@ -458,7 +457,7 @@
 									</div>
 									<div class="modal-footer text-right">
 										<button data-dismiss="modal" class="btn btn-primary btn-sm">取消</button>
-										<button data-dismiss="modal" class="btn btn-danger btn-sm" @click="saveEditNewOrder">保存</button>
+										<button data-dismiss="modal" class="btn btn-danger btn-sm" @click="saveEditOrder">保存</button>
 									</div>
 								</div>
 							</div>
@@ -550,9 +549,10 @@
 			};
 			//新增的文档
 		   var  addNewDocument={
-					"ktype":"doc",//文档类型
+					"ktype":"url",//文档类型
 					"q":"",
 					"a":"",
+					"qs":[],
 					"url":"",
 					"apiKey" : __apiKey
 				};
@@ -597,6 +597,7 @@
 						   a=new Vue({
 									el:"#box",
 									data:{
+										listSettings:{},
 										myData:"",//后台请求列表数据
 										editInputData:"",//编辑后提交数据
 										editInputDocument:"",//编辑后提交数据
@@ -636,7 +637,16 @@
 													success : function(data) {
 														columnDefine=data.response.extend;
 														_toatlPate=data.response.numFound;
+														
+													
 													  _self.myData=data.response.docs;
+													  if(data.response.docs[0]){
+														_self.listSettings.extend0Width = data.response.docs[0].extend0 ? 200:0;
+														_self.listSettings.extend1Width = data.response.docs[0].extend1 ? 200:0;
+													  }else{
+														_self.listSettings.extend0Width = 0;
+														_self.listSettings.extend1Width = 0;
+													  }
 													   initPage();
 
 
@@ -832,6 +842,7 @@
 
 												 });
 										 },
+										 //新增命令保存
 										 saveAddNewOrder:function(){
 											//将新增文档提交后端
 											if(this.addNewOrder.q==""){
@@ -881,7 +892,7 @@
 
 
 										},
-										 saveEditNewOrder:function(){
+										 saveEditOrder:function(){
 											 this.editInputOrder.apiKey=__apiKey;
 											 var finanalEditOrder=JSON.parse(JSON.stringify(this.editInputOrder));
 											 if(finanalEditOrder.qs && Object.prototype.toString.call(finanalEditOrder.qs) === '[object Array]'){
@@ -918,6 +929,7 @@
 
 												 });
 										 },
+										//查看编辑
 										editContent:function(id){
 											var _self=this;
 											var initEditData;
